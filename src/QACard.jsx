@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getDiagram } from "./Diagrams";
 
 export default function QACard({ item, index, topicColor, topicLabel, showTopic, delay = 0, srsStatus }) {
   const [revealed, setRevealed] = useState(false);
@@ -39,6 +40,15 @@ export default function QACard({ item, index, topicColor, topicLabel, showTopic,
           <div className="qa-card__answer">
             <div className="qa-card__answer-label">Answer</div>
             {item.answer}
+            {getDiagram(item.id) && (
+              <div
+                className="qa-card__diagram"
+                style={{ marginTop: "20px" }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {getDiagram(item.id)}
+              </div>
+            )}
           </div>
         )}
       </div>
