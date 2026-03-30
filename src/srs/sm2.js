@@ -68,10 +68,23 @@ export function isNew(srsData) {
 }
 
 export function getIntervalPreview(quality, repetition, easinessFactor, interval) {
-  const result = sm2(quality, repetition, easinessFactor, interval);
+  // For new/early cards, simulate forward to show meaningful differentiation.
+  // The SM-2 algorithm gives identical intervals for the first 2 reviews
+  // regardless of quality (1 day, then 6 days), so we project further ahead
+  // to show the user how their rating impacts long-term scheduling.
+  let result = sm2(quality, repetition, easinessFactor, interval);
+
+  if (repetition <= 1 && quality >= 3) {
+    // Simulate 2 more successful reviews at the same quality
+    result = sm2(quality, result.repetition, result.easinessFactor, result.interval);
+    result = sm2(quality, result.repetition, result.easinessFactor, result.interval);
+  }
+
   const days = result.interval;
   if (days === 1) return "1 day";
   if (days < 30) return `${days} days`;
-  if (days < 365) return `${Math.round(days / 30)} months`;
-  return `${Math.round(days / 365)} years`;
+  const months = Math.round(days / 30);
+  if (days < 365) return `${months} ${months === 1 ? "month" : "months"}`;
+  const years = Math.round(days / 365);
+  return `${years} ${years === 1 ? "year" : "years"}`;
 }
