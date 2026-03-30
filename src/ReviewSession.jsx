@@ -1,14 +1,7 @@
 import { useState, useEffect } from "react";
 import { getIntervalPreview, createDefaultSRSData } from "./srs/sm2.js";
 import { MODES } from "./srs/useSRS.js";
-
-const RATING_BUTTONS = [
-  { quality: 0, label: "Again", emoji: "🔴", desc: "No idea" },
-  { quality: 2, label: "Hard", emoji: "🟠", desc: "Wrong but familiar" },
-  { quality: 3, label: "Good", emoji: "🟡", desc: "Right with effort" },
-  { quality: 4, label: "Easy", emoji: "🟢", desc: "Got it right" },
-  { quality: 5, label: "Perfect", emoji: "🔵", desc: "Instant recall" },
-];
+import { useI18n } from "./i18n/I18nContext.jsx";
 
 export default function ReviewSession({ srs, topics, mode, sessionType, onFinish }) {
   const [queue, setQueue] = useState([]);
@@ -16,6 +9,16 @@ export default function ReviewSession({ srs, topics, mode, sessionType, onFinish
   const [revealed, setRevealed] = useState(false);
   const [sessionResults, setSessionResults] = useState([]);
   const [learningQueue, setLearningQueue] = useState([]);
+  const { t } = useI18n();
+
+  // Build rating buttons with translated labels
+  const RATING_BUTTONS = [
+    { quality: 0, label: t("session.again"), emoji: "🔴", desc: "No idea" },
+    { quality: 2, label: t("session.hard"), emoji: "🟠", desc: "Wrong but familiar" },
+    { quality: 3, label: t("session.good"), emoji: "🟡", desc: "Right with effort" },
+    { quality: 4, label: t("session.easy"), emoji: "🟢", desc: "Got it right" },
+    { quality: 5, label: t("session.perfect"), emoji: "🔵", desc: "Instant recall" },
+  ];
 
   useEffect(() => {
     const queues = srs.getQueues(mode);
@@ -65,21 +68,23 @@ export default function ReviewSession({ srs, topics, mode, sessionType, onFinish
       else breakdown.perfect++;
     }
 
+    const modeLabel = mode === MODES.CAREER ? t("session.career") : t("session.technical");
+
     return (
       <div className="review-summary">
         <div className="review-summary__icon">✓</div>
-        <h2 className="review-summary__title">Session Complete</h2>
+        <h2 className="review-summary__title">{t("session.complete")}</h2>
         <p className="review-summary__subtitle">
-          {mode === MODES.CAREER ? "Career" : "Technical"} · {sessionResults.length} cards reviewed
+          {modeLabel} · {sessionResults.length} {t("session.cardsReviewed")}
         </p>
 
         <div className="review-summary__breakdown">
           {[
-            { label: "Again", count: breakdown.again, color: "#ef4444" },
-            { label: "Hard", count: breakdown.hard, color: "#f97316" },
-            { label: "Good", count: breakdown.good, color: "#eab308" },
-            { label: "Easy", count: breakdown.easy, color: "#4ade80" },
-            { label: "Perfect", count: breakdown.perfect, color: "#3b82f6" },
+            { label: t("session.again"), count: breakdown.again, color: "#ef4444" },
+            { label: t("session.hard"), count: breakdown.hard, color: "#f97316" },
+            { label: t("session.good"), count: breakdown.good, color: "#eab308" },
+            { label: t("session.easy"), count: breakdown.easy, color: "#4ade80" },
+            { label: t("session.perfect"), count: breakdown.perfect, color: "#3b82f6" },
           ].map((b) => (
             <div key={b.label} className="review-summary__bar-row">
               <span className="review-summary__bar-label" style={{ color: b.color }}>
@@ -100,7 +105,7 @@ export default function ReviewSession({ srs, topics, mode, sessionType, onFinish
         </div>
 
         <button className="gen-btn gen-btn--full" onClick={handleFinish}>
-          Done
+          {t("session.done")}
         </button>
       </div>
     );
@@ -110,10 +115,10 @@ export default function ReviewSession({ srs, topics, mode, sessionType, onFinish
     return (
       <div className="review-summary">
         <div className="review-summary__icon">✓</div>
-        <h2 className="review-summary__title">All caught up!</h2>
-        <p className="review-summary__subtitle">No cards to review right now.</p>
+        <h2 className="review-summary__title">{t("session.allCaughtUp")}</h2>
+        <p className="review-summary__subtitle">{t("session.noCards")}</p>
         <button className="gen-btn gen-btn--full" onClick={() => onFinish([])}>
-          Back
+          {t("session.back")}
         </button>
       </div>
     );
@@ -157,13 +162,13 @@ export default function ReviewSession({ srs, topics, mode, sessionType, onFinish
 
         {!revealed ? (
           <button className="review-card__reveal" onClick={() => setRevealed(true)}>
-            Show Answer
+            {t("session.showAnswer")}
           </button>
         ) : (
           <>
             <div className="review-card__answer">{currentCard.answer}</div>
             <div className="review-card__divider" />
-            <div className="review-card__prompt">How well did you recall this?</div>
+            <div className="review-card__prompt">{t("session.howWell")}</div>
             <div className="review-card__ratings">
               {RATING_BUTTONS.map((btn) => (
                 <button

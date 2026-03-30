@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useI18n } from "./i18n/I18nContext.jsx";
 
 const CAREER = {
   name: "Douglas Godoy Cardoso",
@@ -221,18 +222,19 @@ function TimelineItem({ job, isLast }) {
 
 export default function CVPage({ onBack }) {
   const [activeSection, setActiveSection] = useState("overview");
+  const { t } = useI18n();
 
   const sections = [
-    { id: "overview", label: "Overview" },
-    { id: "experience", label: "Experience" },
-    { id: "skills", label: "Skills" },
-    { id: "projects", label: "Projects" },
+    { id: "overview", label: t("cv.overview") },
+    { id: "experience", label: t("cv.experience") },
+    { id: "skills", label: t("cv.skills") },
+    { id: "projects", label: t("cv.projects") },
   ];
 
   return (
     <div className="cv-page">
       <button className="question-list__back" onClick={onBack}>
-        ← Back
+        {t("questionList.back")}
       </button>
 
       {/* hero */}
@@ -290,7 +292,7 @@ export default function CVPage({ onBack }) {
       {/* overview */}
       {activeSection === "overview" && (
         <div className="cv-section">
-          <h2 className="cv-section__title">Career Timeline</h2>
+          <h2 className="cv-section__title">{t("cv.careerTimeline")}</h2>
           <div className="timeline">
             {CAREER.experience.map((job, i) => (
               <TimelineItem
@@ -306,7 +308,7 @@ export default function CVPage({ onBack }) {
       {/* experience */}
       {activeSection === "experience" && (
         <div className="cv-section">
-          <h2 className="cv-section__title">Professional Experience</h2>
+          <h2 className="cv-section__title">{t("cv.professionalExperience")}</h2>
           {CAREER.experience.map((job) => (
             <div key={job.company} className="cv-exp-card">
               <div className="cv-exp-card__header">
@@ -336,7 +338,7 @@ export default function CVPage({ onBack }) {
       {/* skills */}
       {activeSection === "skills" && (
         <div className="cv-section">
-          <h2 className="cv-section__title">Technical Skills</h2>
+          <h2 className="cv-section__title">{t("cv.technicalSkills")}</h2>
           <div className="cv-skills-grid">
             {Object.entries(CAREER.skills).map(([category, items]) => (
               <div key={category} className="cv-skill-group">
@@ -355,7 +357,7 @@ export default function CVPage({ onBack }) {
       {/* projects */}
       {activeSection === "projects" && (
         <div className="cv-section">
-          <h2 className="cv-section__title">Projects</h2>
+          <h2 className="cv-section__title">{t("cv.projects")}</h2>
           {CAREER.projects.map((p) => (
             <div key={p.name} className="cv-exp-card">
               <div className="cv-exp-card__header">

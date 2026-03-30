@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { getDiagram } from "./Diagrams";
+import { useI18n } from "./i18n/I18nContext.jsx";
 
 export default function QACard({ item, index, topicColor, topicLabel, showTopic, delay = 0, srsStatus }) {
   const [revealed, setRevealed] = useState(false);
+  const { t } = useI18n();
 
   return (
     <div
@@ -31,14 +33,14 @@ export default function QACard({ item, index, topicColor, topicLabel, showTopic,
           )}
           {srsStatus && (
             <span className={`qa-card__srs-badge qa-card__srs-badge--${srsStatus === "due" ? "due" : srsStatus === "new" ? "new" : "scheduled"}`}>
-              {srsStatus === "due" ? "Due" : srsStatus === "new" ? "New" : srsStatus}
+              {srsStatus === "due" ? t("srs.due") : srsStatus === "new" ? t("srs.new") : srsStatus}
             </span>
           )}
         </div>
         <div className="qa-card__question">{item.question}</div>
         {revealed && (
           <div className="qa-card__answer">
-            <div className="qa-card__answer-label">Answer</div>
+            <div className="qa-card__answer-label">{t("qaCard.answerLabel")}</div>
             {item.answer}
             {getDiagram(item.id) && (
               <div

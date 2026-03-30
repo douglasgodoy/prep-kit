@@ -1,10 +1,13 @@
 import QACard from "./QACard.jsx";
+import { useI18n } from "./i18n/I18nContext.jsx";
 
 export default function QuestionList({ topic, onBack, getStatus }) {
+  const { t } = useI18n();
+
   return (
     <div className="question-list">
       <button className="question-list__back" onClick={onBack}>
-        ← Back
+        {t("questionList.back")}
       </button>
       <div className="question-list__header">
         <span className="question-list__icon" style={{ color: topic.color }}>
@@ -13,7 +16,7 @@ export default function QuestionList({ topic, onBack, getStatus }) {
         <div>
           <h1 className="question-list__title">{topic.label}</h1>
           <span className="question-list__count">
-            {topic.questions.length} questions
+            {topic.questions.length} {t("questionList.questions")}
           </span>
         </div>
       </div>

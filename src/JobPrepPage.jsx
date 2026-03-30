@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { uid } from "./data.js";
 import QACard from "./QACard.jsx";
+import { useI18n } from "./i18n/I18nContext.jsx";
 
 function buildJobPrepPrompt(jobDescription) {
   return `You are a senior technical interviewer. Based on the following job description, generate 10 high-quality technical interview questions with detailed answers that a recruiter or technical interviewer would likely ask a candidate.
@@ -33,6 +34,7 @@ export default function JobPrepPage({ topics, onAddQuestions, onBack }) {
   const [genError, setGenError] = useState("");
   const [results, setResults] = useState([]);
   const [jobTitle, setJobTitle] = useState("");
+  const { t } = useI18n();
 
   async function handleGenerate() {
     if (!jobDescription.trim()) return;
@@ -69,7 +71,7 @@ export default function JobPrepPage({ topics, onAddQuestions, onBack }) {
       newQs.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
       setResults(newQs);
     } catch (e) {
-      setGenError("Generation failed — check console for details.");
+      setGenError(t("modal.generationFailed"));
       console.error(e);
     }
     setGenerating(false);
@@ -77,7 +79,7 @@ export default function JobPrepPage({ topics, onAddQuestions, onBack }) {
 
   function handleSaveToTopic() {
     // Save to "mycareer" topic if it exists, otherwise create a new one
-    const careerTopic = topics.find((t) => t.id === "mycareer");
+    const careerTopic = topics.find((tp) => tp.id === "mycareer");
     if (careerTopic) {
       onAddQuestions("mycareer", results);
     }
@@ -86,33 +88,33 @@ export default function JobPrepPage({ topics, onAddQuestions, onBack }) {
   return (
     <div className="jobprep">
       <button className="question-list__back" onClick={onBack}>
-        ← Back
+        {t("questionList.back")}
       </button>
 
       <div className="jobprep__header">
-        <h1 className="jobprep__title">Job Prep</h1>
+        <h1 className="jobprep__title">{t("jobprep.title")}</h1>
         <p className="jobprep__subtitle">
-          Paste a job description below and get tailored interview questions that recruiters and technical interviewers are likely to ask.
+          {t("jobprep.subtitle")}
         </p>
       </div>
 
       <div className="jobprep__form">
         <div className="jobprep__field">
-          <label className="field-label">Job Title (optional)</label>
+          <label className="field-label">{t("jobprep.jobTitle")}</label>
           <input
             className="field-input"
             value={jobTitle}
             onChange={(e) => setJobTitle(e.target.value)}
-            placeholder="e.g. Senior Backend Engineer at Stripe"
+            placeholder={t("jobprep.jobTitlePlaceholder")}
           />
         </div>
         <div className="jobprep__field">
-          <label className="field-label">Job Description</label>
+          <label className="field-label">{t("jobprep.jobDescription")}</label>
           <textarea
             className="field-textarea jobprep__textarea"
             value={jobDescription}
             onChange={(e) => setJobDescription(e.target.value)}
-            placeholder="Paste the full job description here..."
+            placeholder={t("jobprep.jobDescPlaceholder")}
             rows={10}
           />
         </div>
@@ -123,10 +125,10 @@ export default function JobPrepPage({ topics, onAddQuestions, onBack }) {
         >
           {generating ? (
             <>
-              <span className="gen-btn__spinner" /> Analyzing job description...
+              <span className="gen-btn__spinner" /> {t("jobprep.generating")}
             </>
           ) : (
-            "Generate Interview Questions"
+            t("jobprep.generateBtn")
           )}
         </button>
         {genError && <div className="jobprep__error">{genError}</div>}
@@ -137,14 +139,16 @@ export default function JobPrepPage({ topics, onAddQuestions, onBack }) {
           <div className="jobprep__results-header">
             <div>
               <h2 className="jobprep__results-title">
-                {jobTitle ? `Questions for: ${jobTitle}` : "Generated Questions"}
+                {jobTitle
+                  ? t("jobprep.questionsFor", { title: jobTitle })
+                  : t("jobprep.generatedQuestions")}
               </h2>
               <span className="jobprep__results-count">
-                {results.length} questions · sorted by likelihood
+                {results.length} {t("jobprep.sortedBy")}
               </span>
             </div>
             <button className="btn btn--accent" onClick={handleSaveToTopic}>
-              Save to My Career
+              {t("jobprep.saveToCareer")}
             </button>
           </div>
 

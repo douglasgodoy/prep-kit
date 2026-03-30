@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { buildPrompt, uid } from "./data.js";
+import { useI18n } from "./i18n/I18nContext.jsx";
 
 export default function ActionModal({ topics, onAddQuestions, onClose }) {
   const [tab, setTab] = useState("generate"); // "generate" | "manual"
@@ -10,8 +11,9 @@ export default function ActionModal({ topics, onAddQuestions, onClose }) {
   const [genError, setGenError] = useState("");
   const [manualQ, setManualQ] = useState({ subtopic: "", question: "", answer: "" });
   const [success, setSuccess] = useState("");
+  const { t } = useI18n();
 
-  const selectedTopic = topics.find((t) => t.id === targetTopic);
+  const selectedTopic = topics.find((tp) => tp.id === targetTopic);
 
   async function handleGenerate() {
     if (!genSubtopic.trim() || !selectedTopic) return;
@@ -44,9 +46,9 @@ export default function ActionModal({ topics, onAddQuestions, onClose }) {
         answer: q.answer,
       }));
       onAddQuestions(targetTopic, newQs);
-      setSuccess(`Added ${newQs.length} questions to ${selectedTopic.label}`);
+      setSuccess(t("modal.added", { count: newQs.length, topic: selectedTopic.label }));
     } catch (e) {
-      setGenError("Generation failed — check console for details.");
+      setGenError(t("modal.generationFailed"));
       console.error(e);
     }
     setGenerating(false);
@@ -62,7 +64,7 @@ export default function ActionModal({ topics, onAddQuestions, onClose }) {
     };
     onAddQuestions(targetTopic, [newQ]);
     setManualQ({ subtopic: "", question: "", answer: "" });
-    setSuccess(`Added question to ${selectedTopic?.label}`);
+    setSuccess(t("modal.addedOne", { topic: selectedTopic?.label }));
   }
 
   return (
@@ -75,14 +77,14 @@ export default function ActionModal({ topics, onAddQuestions, onClose }) {
               onClick={() => { setTab("generate"); setSuccess(""); }}
             >
               <span className="modal__tab-icon">✦</span>
-              AI Generate
+              {t("modal.aiGenerate")}
             </button>
             <button
               className={`modal__tab ${tab === "manual" ? "modal__tab--active" : ""}`}
               onClick={() => { setTab("manual"); setSuccess(""); }}
             >
               <span className="modal__tab-icon">+</span>
-              Manual Add
+              {t("modal.manualAdd")}
             </button>
           </div>
           <button className="modal__close" onClick={onClose}>×</button>
@@ -90,19 +92,19 @@ export default function ActionModal({ topics, onAddQuestions, onClose }) {
 
         {/* topic selector — shared by both tabs */}
         <div className="modal__field">
-          <label className="field-label">Target Topic</label>
+          <label className="field-label">{t("modal.targetTopic")}</label>
           <div className="topic-selector">
-            {topics.map((t) => (
+            {topics.map((tp) => (
               <button
-                key={t.id}
-                className={`topic-selector__btn ${targetTopic === t.id ? "topic-selector__btn--active" : ""}`}
+                key={tp.id}
+                className={`topic-selector__btn ${targetTopic === tp.id ? "topic-selector__btn--active" : ""}`}
                 style={{
-                  borderColor: targetTopic === t.id ? t.color : undefined,
-                  color: targetTopic === t.id ? t.color : undefined,
+                  borderColor: targetTopic === tp.id ? tp.color : undefined,
+                  color: targetTopic === tp.id ? tp.color : undefined,
                 }}
-                onClick={() => setTargetTopic(t.id)}
+                onClick={() => setTargetTopic(tp.id)}
               >
-                {t.icon} {t.label}
+                {tp.icon} {tp.label}
               </button>
             ))}
           </div>
@@ -112,7 +114,7 @@ export default function ActionModal({ topics, onAddQuestions, onClose }) {
           <div className="modal__body">
             <div className="modal__row">
               <div className="modal__field modal__field--grow">
-                <label className="field-label">Subtopic</label>
+                <label className="field-label">{t("modal.subtopic")}</label>
                 <input
                   className="field-input"
                   value={genSubtopic}
@@ -121,7 +123,7 @@ export default function ActionModal({ topics, onAddQuestions, onClose }) {
                 />
               </div>
               <div className="modal__field">
-                <label className="field-label">Count</label>
+                <label className="field-label">{t("modal.count")}</label>
                 <select
                   className="field-select"
                   value={genCount}
@@ -138,14 +140,14 @@ export default function ActionModal({ topics, onAddQuestions, onClose }) {
               onClick={handleGenerate}
               disabled={generating}
             >
-              {generating ? <span className="gen-btn__spinner" /> : "Generate Questions"}
+              {generating ? <span className="gen-btn__spinner" /> : t("modal.generate")}
             </button>
             {genError && <div className="modal__error">{genError}</div>}
           </div>
         ) : (
           <div className="modal__body">
             <div className="modal__field">
-              <label className="field-label">Subtopic</label>
+              <label className="field-label">{t("modal.subtopic")}</label>
               <input
                 className="field-input"
                 value={manualQ.subtopic}
@@ -154,7 +156,7 @@ export default function ActionModal({ topics, onAddQuestions, onClose }) {
               />
             </div>
             <div className="modal__field">
-              <label className="field-label">Question</label>
+              <label className="field-label">{t("modal.question")}</label>
               <input
                 className="field-input"
                 value={manualQ.question}
@@ -163,7 +165,7 @@ export default function ActionModal({ topics, onAddQuestions, onClose }) {
               />
             </div>
             <div className="modal__field">
-              <label className="field-label">Answer</label>
+              <label className="field-label">{t("modal.answer")}</label>
               <textarea
                 className="field-textarea"
                 value={manualQ.answer}
@@ -173,7 +175,7 @@ export default function ActionModal({ topics, onAddQuestions, onClose }) {
               />
             </div>
             <button className="gen-btn gen-btn--full" onClick={handleManualAdd}>
-              Add Question
+              {t("modal.addQuestion")}
             </button>
           </div>
         )}

@@ -1,27 +1,31 @@
+import { useI18n } from "./i18n/I18nContext.jsx";
+
 export default function Dashboard({ topics, onSelectTopic }) {
+  const { t } = useI18n();
+
   const specialCards = [
     {
       id: "__cv__",
-      label: "My CV",
+      label: t("card.cv.label"),
       icon: "◆",
       color: "#E8A838",
-      description: "Career highlights, timeline, skills & experience details",
+      description: t("card.cv.desc"),
       type: "special",
     },
     {
       id: "__jobprep__",
-      label: "Job Prep",
+      label: t("card.jobprep.label"),
       icon: "◎",
       color: "#a855f7",
-      description: "Paste a job description and get tailored interview questions",
+      description: t("card.jobprep.desc"),
       type: "special",
     },
     {
       id: "__review__",
-      label: "Review",
+      label: t("card.review.label"),
       icon: "◉",
       color: "#4ade80",
-      description: "Spaced repetition — memorize questions with SM-2 algorithm",
+      description: t("card.review.desc"),
       type: "special",
     },
   ];
@@ -29,10 +33,12 @@ export default function Dashboard({ topics, onSelectTopic }) {
   return (
     <div className="dashboard">
       <div className="dashboard__hero">
-        <h1 className="dashboard__title">What are you studying today?</h1>
+        <h1 className="dashboard__title">{t("dashboard.title")}</h1>
         <p className="dashboard__subtitle">
-          {topics.reduce((s, t) => s + t.questions.length, 0)} questions across{" "}
-          {topics.length} topics
+          {t("dashboard.subtitle", {
+            count: topics.reduce((s, tp) => s + tp.questions.length, 0),
+            topics: topics.length,
+          })}
         </p>
       </div>
 
@@ -58,27 +64,27 @@ export default function Dashboard({ topics, onSelectTopic }) {
       </div>
 
       {/* topic cards */}
-      <div className="dashboard__section-label">Study Topics</div>
+      <div className="dashboard__section-label">{t("dashboard.sectionLabel")}</div>
       <div className="dashboard__grid">
-        {topics.map((t) => (
+        {topics.map((tp) => (
           <button
-            key={t.id}
+            key={tp.id}
             className="topic-card"
-            onClick={() => onSelectTopic(t.id)}
+            onClick={() => onSelectTopic(tp.id)}
           >
             <div
               className="topic-card__accent"
-              style={{ background: t.color }}
+              style={{ background: tp.color }}
             />
-            <div className="topic-card__icon" style={{ color: t.color }}>
-              {t.icon}
+            <div className="topic-card__icon" style={{ color: tp.color }}>
+              {tp.icon}
             </div>
-            <div className="topic-card__label">{t.label}</div>
-            <div className="topic-card__count" style={{ color: t.color }}>
-              {t.questions.length} questions
+            <div className="topic-card__label">{tp.label}</div>
+            <div className="topic-card__count" style={{ color: tp.color }}>
+              {tp.questions.length} {t("dashboard.questions")}
             </div>
             <div className="topic-card__subtopics">
-              {[...new Set(t.questions.map((q) => q.subtopic))].map((s) => (
+              {[...new Set(tp.questions.map((q) => q.subtopic))].map((s) => (
                 <span key={s} className="topic-card__tag">
                   {s}
                 </span>

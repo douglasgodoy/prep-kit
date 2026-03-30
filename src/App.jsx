@@ -9,6 +9,7 @@ import JobPrepPage from "./JobPrepPage.jsx";
 import ReviewDashboard from "./ReviewDashboard.jsx";
 import ReviewSession from "./ReviewSession.jsx";
 import { useSRS } from "./srs/useSRS.js";
+import { useI18n } from "./i18n/I18nContext.jsx";
 import "./App.css";
 
 export default function App() {
@@ -22,6 +23,7 @@ export default function App() {
   const [reviewSessionType, setReviewSessionType] = useState(null);
   const searchRef = useRef(null);
   const srs = useSRS(topics);
+  const { locale, t, changeLocale } = useI18n();
 
   useEffect(() => setMounted(true), []);
 
@@ -109,8 +111,8 @@ export default function App() {
         <button className="header__brand" onClick={handleBack}>
           <div className="header__logo">IP</div>
           <div className="header__titles">
-            <div className="header__eyebrow">Technical Interview</div>
-            <div className="header__title">Prep Kit</div>
+            <div className="header__eyebrow">{t("header.eyebrow")}</div>
+            <div className="header__title">{t("header.title")}</div>
           </div>
         </button>
 
@@ -122,7 +124,7 @@ export default function App() {
             type="text"
             value={searchQuery}
             onChange={handleSearchChange}
-            placeholder="Search all questions…"
+            placeholder={t("header.search")}
           />
           {searchQuery && (
             <button className="header__search-clear" onClick={handleSearchClear}>
@@ -131,9 +133,16 @@ export default function App() {
           )}
         </div>
 
+        <button
+          className="header__lang"
+          onClick={() => changeLocale(locale === "en" ? "pt-BR" : "en")}
+        >
+          {locale === "en" ? "PT" : "EN"}
+        </button>
+
         <div className="header__meta">
           <span className="header__dot" />
-          {totalQuestions} questions
+          {totalQuestions} {t("header.questions")}
         </div>
       </header>
 
