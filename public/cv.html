@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Douglas Godoy Cardoso — Senior Fullstack Engineer</title>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Douglas Godoy Cardoso — Senior Fullstack Engineer" />
+  <meta property="og:description" content="Full-stack Senior Software Engineer with 7+ years building AI-powered applications, scalable distributed systems, and high-performance data pipelines." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://douglasgodoy.dev/cv" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Douglas Godoy Cardoso — Senior Fullstack Engineer" />
+  <meta name="twitter:description" content="Full-stack Senior Software Engineer | AI Systems Specialist | 7+ years experience" />
+  <meta name="description" content="Full-stack Senior Software Engineer with 7+ years building AI-powered applications, scalable distributed systems, and high-performance data pipelines." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================
+       RESET & BASE
+    ============================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #060606;
+      --bg2: #0d0d0d;
+      --bg3: #141414;
+      --border: rgba(255,255,255,0.07);
+      --text: #f0ece4;
+      --text-muted: #9a9590;
+      --text-dim: #5a5650;
+      --accent: #E8A838;
+      --accent-dim: rgba(232,168,56,0.15);
+      --accent-border: rgba(232,168,56,0.3);
+      --font-display: 'Outfit', sans-serif;
+      --font-label: 'Sora', sans-serif;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-display);
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Grain texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+    }
+
+    /* Subtle top gradient glow */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 500px;
+      background: radial-gradient(ellipse, rgba(232,168,56,0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ============================
+       LAYOUT
+    ============================= */
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section {
+      padding: 64px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    section:last-of-type {
+      border-bottom: none;
+    }
+
+    /* ============================
+       ANIMATIONS
+    ============================= */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .fade-in-delay-1 { transition-delay: 0.1s; }
+    .fade-in-delay-2 { transition-delay: 0.2s; }
+    .fade-in-delay-3 { transition-delay: 0.3s; }
+    .fade-in-delay-4 { transition-delay: 0.4s; }
+
+    /* ============================
+       TOPBAR
+    ============================= */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(6,6,6,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 0;
+    }
+
+    .topbar-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .topbar-name {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.01em;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .lang-toggle {
+      display: flex;
+      align-items: center;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      font-family: var(--font-label);
+      font-size: 12px;
+    }
+
+    .lang-btn {
+      padding: 5px 12px;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: background var(--transition), color var(--transition);
+      border: none;
+      background: none;
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: 500;
+    }
+
+    .lang-btn.active {
+      background: var(--accent);
+      color: #000;
+    }
+
+    .download-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      border-radius: 6px;
+      font-family: var(--font-label);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity var(--transition), transform var(--transition);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .download-btn:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
+    }
+
+    /* ============================
+       HERO
+    ============================= */
+    #hero {
+      padding-top: 80px;
+      padding-bottom: 64px;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-label);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 18px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    .hero-name {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 7vw, 64px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(16px, 2.5vw, 20px);
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-bottom: 36px;
+    }
+
+    .hero-title strong {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .contact-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-label);
+      font-size: 13px;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+
+    .contact-item:hover {
+      color: var(--accent);
+    }
+
+    .contact-item svg {
+      flex-shrink: 0;
+      opacity: 0.7;
+    }
+
+    /* ============================
+       HIGHLIGHTS / STATS
+    ============================= */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    @media (min-width: 600px) {
+      .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    .stat-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: border-color var(--transition), transform var(--transition);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--accent-dim) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .stat-card:hover {
+      border-color: var(--accent-border);
+      transform: translateY(-3px);
+    }
+
+    .stat-card:hover::before {
+      opacity: 1;
+    }
+
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 8px;
+      position: relative;
+    }
+
+    .stat-label {
+      font-family: var(--font-label);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      line-height: 1.4;
+      position: relative;
+    }
+
+    /* ============================
+       SECTION HEADINGS
+    ============================= */
+    .section-heading {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+
+    .section-heading h2 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .section-heading::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ============================
+       SUMMARY
+    ============================= */
+    .summary-text {
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--text-muted);
+      max-width: 720px;
+    }
+
+    .summary-text strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ============================
+       EXPERIENCE TIMELINE
+    ============================= */
+    .timeline {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .job-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color var(--transition);
+    }
+
+    .job-card:hover {
+      border-color: rgba(255,255,255,0.12);
+    }
+
+    .job-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 24px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .job-header:hover .job-title {
+      color: var(--accent);
+    }
+
+    .job-left {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .job-company-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .job-company {
+      font-family: var(--font-label);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .job-type-badge {
+      font-family: var(--font-label);
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 2px 7px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .job-title {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+      transition: color var(--transition);
+    }
+
+    .job-period {
+      font-family: var(--font-label);
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .job-chevron {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-dim);
+      transition: transform var(--transition), color var(--transition);
+      margin-top: 2px;
+    }
+
+    .job-card.open .job-chevron {
+      transform: rotate(180deg);
+      color: var(--accent);
+    }
+
+    .job-body {
+      display: none;
+      padding: 0 24px 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .job-card.open .job-body {
+      display: block;
+    }
+
+    .job-bullets {
+      list-style: none;
+      margin: 16px 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .job-bullets li {
+      display: flex;
+      gap: 12px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    .job-bullets li::before {
+      content: '▸';
+      color: var(--accent);
+      flex-shrink: 0;
+      margin-top: 1px;
+      font-size: 12px;
+    }
+
+    .job-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 4px;
+    }
+
+    .skill-tag {
+      font-family: var(--font-label);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 3px 9px;
+    }
+
+    /* ============================
+       SKILLS GRID
+    ============================= */
+    .skills-categories {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .skill-category-label {
+      font-family: var(--font-label);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 12px;
+    }
+
+    .skill-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .skill-pill {
+      font-family: var(--font-label);
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--text-muted);
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 6px 14px;
+      transition: border-color var(--transition), color var(--transition), background var(--transition);
+    }
+
+    .skill-pill:hover {
+      border-color: var(--accent-border);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    /* ============================
+       PROJECTS
+    ============================= */
+    .project-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: border-color var(--transition), transform var(--transition);
+    }
+
+    .project-card:hover {
+      border-color: var(--accent-border);
+      transform: translateY(-3px);
+    }
+
+    .project-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .project-name {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .project-name span {
+      color: var(--accent);
+    }
+
+    .project-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-label);
+      font-size: 12px;
+      color: var(--accent);
+      text-decoration: none;
+      border: 1px solid var(--accent-border);
+      border-radius: 6px;
+      padding: 6px 12px;
+      transition: background var(--transition);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .project-link:hover {
+      background: var(--accent-dim);
+    }
+
+    .project-desc {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-muted);
+    }
+
+    /* ============================
+       FOOTER
+    ============================= */
+    footer {
+      padding: 40px 0;
+      text-align: center;
+    }
+
+    .footer-text {
+      font-family: var(--font-label);
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    /* ============================
+       PRINT STYLES
+    ============================= */
+    @media print {
+      body::before,
+      body::after,
+      .topbar,
+      .job-chevron {
+        display: none !important;
+      }
+
+      body {
+        background: #fff !important;
+        color: #111 !important;
+      }
+
+      :root {
+        --bg: #fff;
+        --bg2: #f8f8f8;
+        --bg3: #f4f4f4;
+        --border: #ddd;
+        --text: #111;
+        --text-muted: #444;
+        --text-dim: #888;
+        --accent: #c47d00;
+        --accent-dim: #fff9ee;
+        --accent-border: #e4c07a;
+      }
+
+      .job-card .job-body {
+        display: block !important;
+      }
+
+      .wrapper {
+        max-width: 100%;
+        padding: 0 20px;
+      }
+
+      section {
+        padding: 32px 0;
+        break-inside: avoid;
+      }
+
+      .stat-card,
+      .job-card,
+      .project-card {
+        break-inside: avoid;
+      }
+    }
+
+    /* ============================
+       RESPONSIVE
+    ============================= */
+    @media (max-width: 560px) {
+      .hero-name {
+        font-size: 36px;
+      }
+
+      .contact-row {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .job-header {
+        padding: 18px;
+      }
+
+      .job-body {
+        padding: 0 18px 18px;
+      }
+
+      .topbar-name {
+        font-size: 12px;
+      }
+
+      .download-btn span {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <nav class="topbar" aria-label="Navigation">
+    <div class="topbar-inner">
+      <span class="topbar-name">Douglas Godoy Cardoso</span>
+      <div class="topbar-actions">
+        <div class="lang-toggle" role="group" aria-label="Language toggle">
+          <button class="lang-btn active" id="lang-en" onclick="setLang('en')" aria-pressed="true">EN</button>
+          <button class="lang-btn" id="lang-pt" onclick="setLang('pt')" aria-pressed="false">PT</button>
+        </div>
+        <button class="download-btn" onclick="window.print()" aria-label="Download PDF">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <span data-i18n="downloadPDF">Download PDF</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="wrapper">
+    <section id="hero">
+      <div class="hero-eyebrow fade-in">
+        <span data-i18n="available">Available for opportunities</span>
+      </div>
+      <h1 class="hero-name fade-in fade-in-delay-1">Douglas<br>Godoy Cardoso</h1>
+      <p class="hero-title fade-in fade-in-delay-2">
+        <strong>Senior Fullstack Engineer</strong> &amp; <strong data-i18n="aiSpecialist">AI Systems Specialist</strong>
+      </p>
+      <div class="contact-row fade-in fade-in-delay-3">
+        <a class="contact-item" href="mailto:douglasgodoy1998@hotmail.com" aria-label="Email">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          douglasgodoy1998@hotmail.com
+        </a>
+        <a class="contact-item" href="tel:+5544999317317" aria-label="Phone">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.09a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          +55 (44) 99931-7317
+        </a>
+        <a class="contact-item" href="https://linkedin.com/in/douglasgodoy" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+          linkedin.com/in/douglasgodoy
+        </a>
+        <a class="contact-item" href="https://github.com/douglasgodoy" target="_blank" rel="noopener" aria-label="GitHub">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/></svg>
+          github.com/douglasgodoy
+        </a>
+      </div>
+    </section>
+
+    <!-- HIGHLIGHTS -->
+    <section id="highlights">
+      <div class="section-heading fade-in">
+        <h2 data-i18n="highlights">Highlights</h2>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card fade-in fade-in-delay-1">
+          <div class="stat-number">7+</div>
+          <div class="stat-label" data-i18n="statYears">Years of Experience</div>
+        </div>
+        <div class="stat-card fade-in fade-in-delay-2">
+          <div class="stat-number">$10M+</div>
+          <div class="stat-label" data-i18n="statTransactions">Daily Transactions</div>
+        </div>
+        <div class="stat-card fade-in fade-in-delay-3">
+          <div class="stat-number">85%</div>
+          <div class="stat-label" data-i18n="statAccuracy">Accuracy Improvement</div>
+        </div>
+        <div class="stat-card fade-in fade-in-delay-4">
+          <div class="stat-number">3x</div>
+          <div class="stat-label" data-i18n="statDelivery">Faster Feature Delivery</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SUMMARY -->
+    <section id="summary">
+      <div class="section-heading fade-in">
+        <h2 data-i18n="summary">Summary</h2>
+      </div>
+      <p class="summary-text fade-in" data-i18n-html="summaryText">
+        Full-stack Senior Software Engineer with <strong>7+ years</strong> building AI-powered applications, scalable distributed systems, and high-performance data pipelines. Proven expertise architecting production <strong>RAG systems</strong> with vector databases (pgVector, Qdrant), <strong>LLM integration</strong> (OpenAI GPT-4, Claude, Gemini), and semantic retrieval achieving <strong>85% accuracy improvement</strong> and <strong>60% support reduction</strong>.
+      </p>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience">
+      <div class="section-heading fade-in">
+        <h2 data-i18n="experience">Experience</h2>
+      </div>
+      <div class="timeline" id="timeline">
+
+        <!-- Job 1: Lex Consultoria -->
+        <div class="job-card fade-in" data-job="0">
+          <div class="job-header" onclick="toggleJob(this)" role="button" tabindex="0" aria-expanded="false">
+            <div class="job-left">
+              <div class="job-company-row">
+                <span class="job-company">Lex Consultoria</span>
+                <span class="job-type-badge" data-i18n="techLead">Tech Lead</span>
+              </div>
+              <div class="job-title" data-i18n="jobTitle0">Tech Lead</div>
+              <div class="job-period">Aug 2025 – <span data-i18n="present">Present</span></div>
+            </div>
+            <div class="job-chevron" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="job-body">
+            <ul class="job-bullets" data-i18n-list="job0bullets">
+              <li>Built full-stack telemedicine platform with React + Node.js integrating Jitsi video calls, real-time chat, and medical document upload serving <strong>20,000+ employees</strong></li>
+              <li>Developed HR management system with <strong>RAG using OpenAI and pgVector</strong> for intelligent queries about salary, vacation, and organizational data</li>
+              <li>Created anomaly detection system with <strong>Gemini</strong> for time-tracking analysis, saving <strong>20+ hours/week</strong></li>
+              <li>Implemented AI pipeline for automated medical consultation analysis, generating personalized reports for <strong>500+ daily consultations</strong></li>
+            </ul>
+            <div class="job-skills">
+              <span class="skill-tag">React</span>
+              <span class="skill-tag">Node.js</span>
+              <span class="skill-tag">TypeScript</span>
+              <span class="skill-tag">PostgreSQL</span>
+              <span class="skill-tag">pgVector</span>
+              <span class="skill-tag">RAG</span>
+              <span class="skill-tag">Jitsi</span>
+              <span class="skill-tag">Gemini API</span>
+              <span class="skill-tag">OpenAI API</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Job 2: TateAI -->
+        <div class="job-card fade-in" data-job="1">
+          <div class="job-header" onclick="toggleJob(this)" role="button" tabindex="0" aria-expanded="false">
+            <div class="job-left">
+              <div class="job-company-row">
+                <span class="job-company">TateAI</span>
+                <span class="job-type-badge" data-i18n="partTime">Part-time</span>
+              </div>
+              <div class="job-title" data-i18n="jobTitle1">Senior Fullstack Engineer</div>
+              <div class="job-period">May 2024 – Aug 2025</div>
+            </div>
+            <div class="job-chevron" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="job-body">
+            <ul class="job-bullets" data-i18n-list="job1bullets">
+              <li>Developed generative AI platform for agile backlog management, reducing <strong>ideation costs by 80%</strong></li>
+              <li>Complete React frontend architecture with <strong>real-time streaming</strong> for 1000+ concurrent connections</li>
+              <li>Built meeting analysis module with automatic extraction of insights using <strong>LLM integration</strong></li>
+            </ul>
+            <div class="job-skills">
+              <span class="skill-tag">React</span>
+              <span class="skill-tag">Node.js</span>
+              <span class="skill-tag">TypeScript</span>
+              <span class="skill-tag">Qdrant</span>
+              <span class="skill-tag">MongoDB</span>
+              <span class="skill-tag">LLM Integration</span>
+              <span class="skill-tag">Streaming</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Job 3: BTG Pactual -->
+        <div class="job-card fade-in" data-job="2">
+          <div class="job-header" onclick="toggleJob(this)" role="button" tabindex="0" aria-expanded="false">
+            <div class="job-left">
+              <div class="job-company-row">
+                <span class="job-company">BTG Pactual</span>
+              </div>
+              <div class="job-title" data-i18n="jobTitle2">Fullstack Software Engineer</div>
+              <div class="job-period">Apr 2024 – Aug 2025</div>
+            </div>
+            <div class="job-chevron" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="job-body">
+            <ul class="job-bullets" data-i18n-list="job2bullets">
+              <li>Developed financial market systems processing <strong>$10M+ daily transactions</strong> with Node.js, Java, and Next.js</li>
+              <li>Architected serverless projects with <strong>AWS Lambda, DynamoDB, Kafka</strong> achieving 99.9% uptime</li>
+              <li>Created and maintained global financial CRM using Next.js</li>
+              <li>Led migration of Java services to Node.js, reducing <strong>costs by 35%</strong> and improving <strong>response times by 45%</strong></li>
+              <li>Mastered AI-assisted development to ship features <strong>3x faster</strong></li>
+            </ul>
+            <div class="job-skills">
+              <span class="skill-tag">TypeScript</span>
+              <span class="skill-tag">AWS</span>
+              <span class="skill-tag">Kubernetes</span>
+              <span class="skill-tag">Java</span>
+              <span class="skill-tag">Next.js</span>
+              <span class="skill-tag">Lambda</span>
+              <span class="skill-tag">Prisma</span>
+              <span class="skill-tag">PostgreSQL</span>
+              <span class="skill-tag">Kafka</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Job 4: FAVO -->
+        <div class="job-card fade-in" data-job="3">
+          <div class="job-header" onclick="toggleJob(this)" role="button" tabindex="0" aria-expanded="false">
+            <div class="job-left">
+              <div class="job-company-row">
+                <span class="job-company">FAVO</span>
+              </div>
+              <div class="job-title" data-i18n="jobTitle3">Senior Software Engineer</div>
+              <div class="job-period">Jan 2022 – Feb 2024</div>
+            </div>
+            <div class="job-chevron" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="job-body">
+            <ul class="job-bullets" data-i18n-list="job3bullets">
+              <li>Microservices in TypeScript with AWS serving <strong>100,000+ daily requests</strong> at 99.95% availability</li>
+              <li>Financial systems with MongoDB, DynamoDB processing <strong>$5M+ monthly transactions</strong></li>
+              <li>E-commerce platform with Flutter and Next.js/React Native serving <strong>6,000+ active users</strong></li>
+              <li><strong>60% latency reduction</strong> through optimization, 35% conversion rate improvement</li>
+            </ul>
+            <div class="job-skills">
+              <span class="skill-tag">TypeScript</span>
+              <span class="skill-tag">AWS Lambda</span>
+              <span class="skill-tag">DynamoDB</span>
+              <span class="skill-tag">MongoDB</span>
+              <span class="skill-tag">Flutter</span>
+              <span class="skill-tag">React Native</span>
+              <span class="skill-tag">Next.js</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Job 5: Concrete/Accenture -->
+        <div class="job-card fade-in" data-job="4">
+          <div class="job-header" onclick="toggleJob(this)" role="button" tabindex="0" aria-expanded="false">
+            <div class="job-left">
+              <div class="job-company-row">
+                <span class="job-company">Concrete / Accenture</span>
+              </div>
+              <div class="job-title" data-i18n="jobTitle4">Fullstack Engineer</div>
+              <div class="job-period">Jun 2021 – Jan 2022</div>
+            </div>
+            <div class="job-chevron" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="job-body">
+            <ul class="job-bullets" data-i18n-list="job4bullets">
+              <li>APIs and authentication systems with Node.js and AWS for enterprise clients</li>
+              <li>OAuth 2.0 and JWT security improvements</li>
+              <li>Multilingual website with i18n support</li>
+            </ul>
+            <div class="job-skills">
+              <span class="skill-tag">TypeScript</span>
+              <span class="skill-tag">AWS</span>
+              <span class="skill-tag">Cognito</span>
+              <span class="skill-tag">Lambda</span>
+              <span class="skill-tag">S3</span>
+              <span class="skill-tag">SQS</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Job 6: Pontaltech -->
+        <div class="job-card fade-in" data-job="5">
+          <div class="job-header" onclick="toggleJob(this)" role="button" tabindex="0" aria-expanded="false">
+            <div class="job-left">
+              <div class="job-company-row">
+                <span class="job-company">Pontaltech</span>
+              </div>
+              <div class="job-title" data-i18n="jobTitle5">Backend Engineer</div>
+              <div class="job-period">Aug 2020 – Jun 2021</div>
+            </div>
+            <div class="job-chevron" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="job-body">
+            <ul class="job-bullets" data-i18n-list="job5bullets">
+              <li>Backend solutions with Node.js and PHP for high-performance messaging systems</li>
+              <li>Microservices using RabbitMQ and AWS SQS handling <strong>50,000+ messages/hour</strong></li>
+            </ul>
+            <div class="job-skills">
+              <span class="skill-tag">Node.js</span>
+              <span class="skill-tag">PHP</span>
+              <span class="skill-tag">RabbitMQ</span>
+              <span class="skill-tag">AWS SQS</span>
+              <span class="skill-tag">SNS</span>
+              <span class="skill-tag">EC2</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Job 7: Coopertech -->
+        <div class="job-card fade-in" data-job="6">
+          <div class="job-header" onclick="toggleJob(this)" role="button" tabindex="0" aria-expanded="false">
+            <div class="job-left">
+              <div class="job-company-row">
+                <span class="job-company">Coopertech</span>
+              </div>
+              <div class="job-title" data-i18n="jobTitle6">Frontend Developer</div>
+              <div class="job-period">Jul 2019 – Aug 2020</div>
+            </div>
+            <div class="job-chevron" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+          <div class="job-body">
+            <ul class="job-bullets" data-i18n-list="job6bullets">
+              <li>Responsive web interfaces with React and JavaScript</li>
+              <li>Functional programming principles for maintainable components</li>
+            </ul>
+            <div class="job-skills">
+              <span class="skill-tag">React</span>
+              <span class="skill-tag">JavaScript</span>
+              <span class="skill-tag">CSS</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills">
+      <div class="section-heading fade-in">
+        <h2 data-i18n="skills">Skills</h2>
+      </div>
+      <div class="skills-categories">
+
+        <div class="fade-in">
+          <div class="skill-category-label" data-i18n="skillsAI">AI &amp; Data</div>
+          <div class="skill-pills">
+            <span class="skill-pill">RAG</span>
+            <span class="skill-pill">pgVector</span>
+            <span class="skill-pill">Qdrant</span>
+            <span class="skill-pill">LLM Integration</span>
+            <span class="skill-pill">OpenAI GPT-4</span>
+            <span class="skill-pill">Claude API</span>
+            <span class="skill-pill">Gemini</span>
+            <span class="skill-pill">Embeddings</span>
+            <span class="skill-pill">Semantic Search</span>
+            <span class="skill-pill">Prompt Engineering</span>
+          </div>
+        </div>
+
+        <div class="fade-in">
+          <div class="skill-category-label" data-i18n="skillsLang">Languages &amp; Frameworks</div>
+          <div class="skill-pills">
+            <span class="skill-pill">TypeScript</span>
+            <span class="skill-pill">JavaScript</span>
+            <span class="skill-pill">Node.js</span>
+            <span class="skill-pill">NestJS</span>
+            <span class="skill-pill">Express</span>
+            <span class="skill-pill">React</span>
+            <span class="skill-pill">Next.js</span>
+            <span class="skill-pill">Java</span>
+            <span class="skill-pill">Python</span>
+            <span class="skill-pill">Prisma ORM</span>
+          </div>
+        </div>
+
+        <div class="fade-in">
+          <div class="skill-category-label" data-i18n="skillsData">Data &amp; Infrastructure</div>
+          <div class="skill-pills">
+            <span class="skill-pill">PostgreSQL</span>
+            <span class="skill-pill">MongoDB</span>
+            <span class="skill-pill">DynamoDB</span>
+            <span class="skill-pill">MySQL</span>
+            <span class="skill-pill">Redis</span>
+            <span class="skill-pill">Elasticsearch</span>
+            <span class="skill-pill">Kafka</span>
+            <span class="skill-pill">RabbitMQ</span>
+            <span class="skill-pill">GraphQL</span>
+            <span class="skill-pill">REST</span>
+            <span class="skill-pill">WebSockets</span>
+          </div>
+        </div>
+
+        <div class="fade-in">
+          <div class="skill-category-label" data-i18n="skillsCloud">Cloud &amp; DevOps</div>
+          <div class="skill-pills">
+            <span class="skill-pill">AWS Lambda</span>
+            <span class="skill-pill">AWS ECS</span>
+            <span class="skill-pill">AWS S3</span>
+            <span class="skill-pill">AWS RDS</span>
+            <span class="skill-pill">AWS SQS/SNS</span>
+            <span class="skill-pill">CloudWatch</span>
+            <span class="skill-pill">Docker</span>
+            <span class="skill-pill">Kubernetes</span>
+            <span class="skill-pill">Terraform</span>
+            <span class="skill-pill">GitHub Actions</span>
+            <span class="skill-pill">Vercel</span>
+          </div>
+        </div>
+
+        <div class="fade-in">
+          <div class="skill-category-label" data-i18n="skillsTesting">Testing &amp; Practices</div>
+          <div class="skill-pills">
+            <span class="skill-pill">Jest</span>
+            <span class="skill-pill">Vitest</span>
+            <span class="skill-pill">React Testing Library</span>
+            <span class="skill-pill">Cypress</span>
+            <span class="skill-pill">Playwright</span>
+            <span class="skill-pill">TDD</span>
+            <span class="skill-pill">Clean Architecture</span>
+            <span class="skill-pill">SOLID</span>
+            <span class="skill-pill">DDD</span>
+          </div>
+        </div>
+
+        <div class="fade-in">
+          <div class="skill-category-label" data-i18n="skillsMobile">Mobile &amp; Frontend</div>
+          <div class="skill-pills">
+            <span class="skill-pill">React Native</span>
+            <span class="skill-pill">Flutter</span>
+            <span class="skill-pill">Expo</span>
+            <span class="skill-pill">Tailwind CSS</span>
+            <span class="skill-pill">Shadcn/UI</span>
+            <span class="skill-pill">Radix UI</span>
+            <span class="skill-pill">Framer Motion</span>
+            <span class="skill-pill">Storybook</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects">
+      <div class="section-heading fade-in">
+        <h2 data-i18n="projects">Projects</h2>
+      </div>
+      <div class="project-card fade-in">
+        <div class="project-header">
+          <div class="project-name">Widt <span>—</span> AI Productivity SaaS</div>
+          <a class="project-link" href="https://widt.dagc-development.org" target="_blank" rel="noopener" aria-label="Visit Widt">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            <span data-i18n="visitProject">Visit</span>
+          </a>
+        </div>
+        <p class="project-desc" data-i18n="widtDesc">
+          Automatic activity tracking platform with structured work reports. Local data processing for privacy with Claude API integration. Built with Electron, React, and Node.js.
+        </p>
+        <div class="job-skills">
+          <span class="skill-tag">Electron</span>
+          <span class="skill-tag">React</span>
+          <span class="skill-tag">Node.js</span>
+          <span class="skill-tag">Claude API</span>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p class="footer-text" data-i18n="footerText">
+        &copy; 2025 Douglas Godoy Cardoso &mdash; <span data-i18n="footerSub">Built for AWS S3 static hosting</span>
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    // ============================
+    // TRANSLATIONS
+    // ============================
+    const translations = {
+      en: {
+        available: 'Available for opportunities',
+        aiSpecialist: 'AI Systems Specialist',
+        downloadPDF: 'Download PDF',
+        highlights: 'Highlights',
+        statYears: 'Years of Experience',
+        statTransactions: 'Daily Transactions',
+        statAccuracy: 'Accuracy Improvement (RAG)',
+        statDelivery: 'Faster Feature Delivery',
+        summary: 'Summary',
+        summaryText: 'Full-stack Senior Software Engineer with <strong>7+ years</strong> building AI-powered applications, scalable distributed systems, and high-performance data pipelines. Proven expertise architecting production <strong>RAG systems</strong> with vector databases (pgVector, Qdrant), <strong>LLM integration</strong> (OpenAI GPT-4, Claude, Gemini), and semantic retrieval achieving <strong>85% accuracy improvement</strong> and <strong>60% support reduction</strong>.',
+        experience: 'Experience',
+        present: 'Present',
+        techLead: 'Tech Lead',
+        partTime: 'Part-time',
+        jobTitle0: 'Tech Lead',
+        jobTitle1: 'Senior Fullstack Engineer',
+        jobTitle2: 'Fullstack Software Engineer',
+        jobTitle3: 'Senior Software Engineer',
+        jobTitle4: 'Fullstack Engineer',
+        jobTitle5: 'Backend Engineer',
+        jobTitle6: 'Frontend Developer',
+        job0bullets: [
+          'Built full-stack telemedicine platform with React + Node.js integrating Jitsi video calls, real-time chat, and medical document upload serving <strong>20,000+ employees</strong>',
+          'Developed HR management system with <strong>RAG using OpenAI and pgVector</strong> for intelligent queries about salary, vacation, and organizational data',
+          'Created anomaly detection system with <strong>Gemini</strong> for time-tracking analysis, saving <strong>20+ hours/week</strong>',
+          'Implemented AI pipeline for automated medical consultation analysis, generating personalized reports for <strong>500+ daily consultations</strong>'
+        ],
+        job1bullets: [
+          'Developed generative AI platform for agile backlog management, reducing <strong>ideation costs by 80%</strong>',
+          'Complete React frontend architecture with <strong>real-time streaming</strong> for 1000+ concurrent connections',
+          'Built meeting analysis module with automatic extraction of insights using <strong>LLM integration</strong>'
+        ],
+        job2bullets: [
+          'Developed financial market systems processing <strong>$10M+ daily transactions</strong> with Node.js, Java, and Next.js',
+          'Architected serverless projects with <strong>AWS Lambda, DynamoDB, Kafka</strong> achieving 99.9% uptime',
+          'Created and maintained global financial CRM using Next.js',
+          'Led migration of Java services to Node.js, reducing <strong>costs by 35%</strong> and improving <strong>response times by 45%</strong>',
+          'Mastered AI-assisted development to ship features <strong>3x faster</strong>'
+        ],
+        job3bullets: [
+          'Microservices in TypeScript with AWS serving <strong>100,000+ daily requests</strong> at 99.95% availability',
+          'Financial systems with MongoDB, DynamoDB processing <strong>$5M+ monthly transactions</strong>',
+          'E-commerce platform with Flutter and Next.js/React Native serving <strong>6,000+ active users</strong>',
+          '<strong>60% latency reduction</strong> through optimization, 35% conversion rate improvement'
+        ],
+        job4bullets: [
+          'APIs and authentication systems with Node.js and AWS for enterprise clients',
+          'OAuth 2.0 and JWT security improvements',
+          'Multilingual website with i18n support'
+        ],
+        job5bullets: [
+          'Backend solutions with Node.js and PHP for high-performance messaging systems',
+          'Microservices using RabbitMQ and AWS SQS handling <strong>50,000+ messages/hour</strong>'
+        ],
+        job6bullets: [
+          'Responsive web interfaces with React and JavaScript',
+          'Functional programming principles for maintainable components'
+        ],
+        skills: 'Skills',
+        skillsAI: 'AI & Data',
+        skillsLang: 'Languages & Frameworks',
+        skillsData: 'Data & Infrastructure',
+        skillsCloud: 'Cloud & DevOps',
+        skillsTesting: 'Testing & Practices',
+        skillsMobile: 'Mobile & Frontend',
+        projects: 'Projects',
+        visitProject: 'Visit',
+        widtDesc: 'Automatic activity tracking platform with structured work reports. Local data processing for privacy with Claude API integration. Built with Electron, React, and Node.js.',
+        footerText: '© 2025 Douglas Godoy Cardoso',
+        footerSub: 'Built for AWS S3 static hosting'
+      },
+      pt: {
+        available: 'Disponível para oportunidades',
+        aiSpecialist: 'Especialista em Sistemas de IA',
+        downloadPDF: 'Baixar PDF',
+        highlights: 'Destaques',
+        statYears: 'Anos de Experiência',
+        statTransactions: 'Transações Diárias',
+        statAccuracy: 'Melhoria de Precisão (RAG)',
+        statDelivery: 'Entrega de Funcionalidades',
+        summary: 'Resumo',
+        summaryText: 'Engenheiro de Software Sênior full-stack com <strong>7+ anos</strong> construindo aplicações impulsionadas por IA, sistemas distribuídos escaláveis e pipelines de dados de alta performance. Expertise comprovada em arquitetura de <strong>sistemas RAG</strong> em produção com bancos de dados vetoriais (pgVector, Qdrant), <strong>integração de LLMs</strong> (OpenAI GPT-4, Claude, Gemini) e recuperação semântica com <strong>85% de melhoria em precisão</strong> e <strong>60% de redução no suporte</strong>.',
+        experience: 'Experiência',
+        present: 'Presente',
+        techLead: 'Tech Lead',
+        partTime: 'Meio período',
+        jobTitle0: 'Tech Lead',
+        jobTitle1: 'Engenheiro Fullstack Sênior',
+        jobTitle2: 'Engenheiro de Software Fullstack',
+        jobTitle3: 'Engenheiro de Software Sênior',
+        jobTitle4: 'Engenheiro Fullstack',
+        jobTitle5: 'Engenheiro Backend',
+        jobTitle6: 'Desenvolvedor Frontend',
+        job0bullets: [
+          'Construiu plataforma de telemedicina full-stack com React + Node.js integrando videochamadas Jitsi, chat em tempo real e upload de documentos médicos para <strong>20.000+ colaboradores</strong>',
+          'Desenvolveu sistema de gestão de RH com <strong>RAG usando OpenAI e pgVector</strong> para consultas inteligentes sobre salário, férias e dados organizacionais',
+          'Criou sistema de detecção de anomalias com <strong>Gemini</strong> para análise de controle de ponto, economizando <strong>20+ horas/semana</strong>',
+          'Implementou pipeline de IA para análise automatizada de consultas médicas, gerando relatórios personalizados para <strong>500+ consultas diárias</strong>'
+        ],
+        job1bullets: [
+          'Desenvolveu plataforma de IA generativa para gestão ágil de backlog, reduzindo <strong>custos de ideação em 80%</strong>',
+          'Arquitetura completa de frontend React com <strong>streaming em tempo real</strong> para 1000+ conexões simultâneas',
+          'Construiu módulo de análise de reuniões com extração automática de insights usando <strong>integração de LLM</strong>'
+        ],
+        job2bullets: [
+          'Desenvolveu sistemas de mercado financeiro processando <strong>$10M+ em transações diárias</strong> com Node.js, Java e Next.js',
+          'Arquitetou projetos serverless com <strong>AWS Lambda, DynamoDB, Kafka</strong> atingindo 99,9% de disponibilidade',
+          'Criou e manteve CRM financeiro global usando Next.js',
+          'Liderou migração de serviços Java para Node.js, reduzindo <strong>custos em 35%</strong> e melhorando <strong>tempos de resposta em 45%</strong>',
+          'Dominou o desenvolvimento assistido por IA para entregar funcionalidades <strong>3x mais rápido</strong>'
+        ],
+        job3bullets: [
+          'Microsserviços em TypeScript com AWS servindo <strong>100.000+ requisições diárias</strong> com 99,95% de disponibilidade',
+          'Sistemas financeiros com MongoDB, DynamoDB processando <strong>$5M+ em transações mensais</strong>',
+          'Plataforma de e-commerce com Flutter e Next.js/React Native servindo <strong>6.000+ usuários ativos</strong>',
+          '<strong>60% de redução na latência</strong> por otimização, melhoria de 35% na taxa de conversão'
+        ],
+        job4bullets: [
+          'APIs e sistemas de autenticação com Node.js e AWS para clientes enterprise',
+          'Melhorias de segurança com OAuth 2.0 e JWT',
+          'Website multilíngue com suporte a i18n'
+        ],
+        job5bullets: [
+          'Soluções backend com Node.js e PHP para sistemas de mensageria de alta performance',
+          'Microsserviços usando RabbitMQ e AWS SQS processando <strong>50.000+ mensagens/hora</strong>'
+        ],
+        job6bullets: [
+          'Interfaces web responsivas com React e JavaScript',
+          'Princípios de programação funcional para componentes manuteníveis'
+        ],
+        skills: 'Habilidades',
+        skillsAI: 'IA & Dados',
+        skillsLang: 'Linguagens & Frameworks',
+        skillsData: 'Dados & Infraestrutura',
+        skillsCloud: 'Cloud & DevOps',
+        skillsTesting: 'Testes & Práticas',
+        skillsMobile: 'Mobile & Frontend',
+        projects: 'Projetos',
+        visitProject: 'Visitar',
+        widtDesc: 'Plataforma de rastreamento automático de atividades com relatórios de trabalho estruturados. Processamento local de dados para privacidade com integração da Claude API. Construído com Electron, React e Node.js.',
+        footerText: '© 2025 Douglas Godoy Cardoso',
+        footerSub: 'Hospedado no AWS S3'
+      }
+    };
+
+    let currentLang = 'en';
+
+    function setLang(lang) {
+      currentLang = lang;
+      const t = translations[lang];
+
+      // Toggle button states
+      document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+      document.getElementById('lang-pt').classList.toggle('active', lang === 'pt');
+      document.getElementById('lang-en').setAttribute('aria-pressed', lang === 'en');
+      document.getElementById('lang-pt').setAttribute('aria-pressed', lang === 'pt');
+
+      // Update html lang
+      document.documentElement.lang = lang;
+
+      // Update simple text nodes
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key] !== undefined) {
+          el.textContent = t[key];
+        }
+      });
+
+      // Update HTML nodes (allow tags like <strong>)
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.getAttribute('data-i18n-html');
+        if (t[key] !== undefined) {
+          el.innerHTML = t[key];
+        }
+      });
+
+      // Update bullet lists
+      document.querySelectorAll('[data-i18n-list]').forEach(ul => {
+        const key = ul.getAttribute('data-i18n-list');
+        if (t[key] !== undefined) {
+          ul.innerHTML = t[key].map(item => `<li>${item}</li>`).join('');
+        }
+      });
+    }
+
+    // ============================
+    // JOB CARD TOGGLE
+    // ============================
+    function toggleJob(header) {
+      const card = header.closest('.job-card');
+      const isOpen = card.classList.contains('open');
+      card.classList.toggle('open', !isOpen);
+      header.setAttribute('aria-expanded', !isOpen);
+    }
+
+    // Keyboard accessibility for job headers
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        const target = e.target;
+        if (target && target.getAttribute('role') === 'button') {
+          e.preventDefault();
+          toggleJob(target);
+        }
+      }
+    });
+
+    // ============================
+    // INTERSECTION OBSERVER
+    // ============================
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.08,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // ============================
+    // PRINT: expand all jobs
+    // ============================
+    window.addEventListener('beforeprint', () => {
+      document.querySelectorAll('.job-card').forEach(c => c.classList.add('open'));
+    });
+
+    window.addEventListener('afterprint', () => {
+      // Collapse them again after print (optional)
+    });
+  </script>
+</body>
+</html>

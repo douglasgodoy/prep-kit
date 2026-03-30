@@ -4,7 +4,10 @@ import { useI18n } from "./i18n/I18nContext.jsx";
 
 export default function QACard({ item, index, topicColor, topicLabel, showTopic, delay = 0, srsStatus }) {
   const [revealed, setRevealed] = useState(false);
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const isPt = locale === "pt-BR";
+  const question = (isPt && item.question_pt) || item.question;
+  const answer = (isPt && item.answer_pt) || item.answer;
 
   return (
     <div
@@ -37,11 +40,11 @@ export default function QACard({ item, index, topicColor, topicLabel, showTopic,
             </span>
           )}
         </div>
-        <div className="qa-card__question">{item.question}</div>
+        <div className="qa-card__question">{question}</div>
         {revealed && (
           <div className="qa-card__answer">
             <div className="qa-card__answer-label">{t("qaCard.answerLabel")}</div>
-            {item.answer}
+            {answer}
             {getDiagram(item.id) && (
               <div
                 className="qa-card__diagram"

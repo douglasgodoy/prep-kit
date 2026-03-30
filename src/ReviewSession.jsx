@@ -9,7 +9,8 @@ export default function ReviewSession({ srs, topics, mode, sessionType, onFinish
   const [revealed, setRevealed] = useState(false);
   const [sessionResults, setSessionResults] = useState([]);
   const [learningQueue, setLearningQueue] = useState([]);
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const isPt = locale === "pt-BR";
 
   // Build rating buttons with translated labels
   const RATING_BUTTONS = [
@@ -158,7 +159,7 @@ export default function ReviewSession({ srs, topics, mode, sessionType, onFinish
       </div>
 
       <div className="review-card">
-        <div className="review-card__question">{currentCard.question}</div>
+        <div className="review-card__question">{(isPt && currentCard.question_pt) || currentCard.question}</div>
 
         {!revealed ? (
           <button className="review-card__reveal" onClick={() => setRevealed(true)}>
@@ -166,7 +167,7 @@ export default function ReviewSession({ srs, topics, mode, sessionType, onFinish
           </button>
         ) : (
           <>
-            <div className="review-card__answer">{currentCard.answer}</div>
+            <div className="review-card__answer">{(isPt && currentCard.answer_pt) || currentCard.answer}</div>
             <div className="review-card__divider" />
             <div className="review-card__prompt">{t("session.howWell")}</div>
             <div className="review-card__ratings">
