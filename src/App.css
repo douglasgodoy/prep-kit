@@ -376,12 +376,60 @@ body {
   color: var(--accent); margin-bottom: 8px; opacity: 0.7;
 }
 
+/* example & diagram visuals */
+.qa-card__visuals {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border-dim);
+}
+
+.qa-card__example-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: none; border: 1px solid var(--border-dim);
+  border-radius: 5px; padding: 6px 14px;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  color: var(--text-tertiary); cursor: pointer;
+  transition: all 0.15s var(--ease-out);
+  letter-spacing: 0.04em;
+}
+.qa-card__example-btn:hover {
+  border-color: var(--border-subtle); color: var(--text-secondary);
+  background: rgba(255,255,255,0.03);
+}
+.qa-card__example-btn--active {
+  background: rgba(255,255,255,0.04);
+}
+.qa-card__example-btn-icon {
+  font-size: 10px; transition: transform 0.2s;
+}
+
+.qa-card__example-content {
+  margin-top: 12px;
+  animation: revealAnswer 0.3s var(--ease-out);
+}
+
+.qa-card__code {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  padding: 14px 16px;
+  font-family: 'SFMono-Regular', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.65;
+  color: #c8c4bc;
+  overflow-x: auto;
+  white-space: pre;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
 .qa-card__diagram {
   border-radius: 8px;
   border: 1px solid rgba(255,255,255,0.08);
   background: rgba(255,255,255,0.02);
   padding: 12px 8px;
   overflow-x: auto;
+  margin-top: 10px;
 }
 
 .qa-card__toggle {
@@ -1239,6 +1287,16 @@ body {
   font-family: var(--font-display); font-size: 14px;
   color: var(--text-secondary); line-height: 1.8; white-space: pre-wrap;
   animation: revealAnswer 0.3s var(--ease-out);
+}
+.review-card__example {
+  margin-top: 16px; padding-top: 12px;
+  border-top: 1px dashed var(--border-dim);
+  animation: revealAnswer 0.3s var(--ease-out);
+}
+.review-card__example-label {
+  font-family: var(--font-mono); font-size: 9px; font-weight: 500;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 10px; opacity: 0.7;
 }
 .review-card__divider { height: 1px; background: var(--border-dim); margin: 24px 0 16px; }
 .review-card__prompt {

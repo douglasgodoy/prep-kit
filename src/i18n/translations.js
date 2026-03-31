@@ -26,6 +26,7 @@ export const translations = {
 
     // QA Card
     "qaCard.answerLabel": "Answer",
+    "qaCard.showExample": "Show Example",
 
     // Search
     "search.results": "result",
@@ -145,6 +146,7 @@ export const translations = {
 
     // QA Card
     "qaCard.answerLabel": "Resposta",
+    "qaCard.showExample": "Ver Exemplo",
 
     // Search
     "search.results": "resultado",

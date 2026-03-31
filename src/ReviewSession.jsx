@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getIntervalPreview, createDefaultSRSData } from "./srs/sm2.js";
 import { MODES } from "./srs/useSRS.js";
 import { useI18n } from "./i18n/I18nContext.jsx";
+import { getDiagram } from "./Diagrams.jsx";
 
 export default function ReviewSession({ srs, topics, mode, sessionType, onFinish }) {
   const [queue, setQueue] = useState([]);
@@ -168,6 +169,22 @@ export default function ReviewSession({ srs, topics, mode, sessionType, onFinish
         ) : (
           <>
             <div className="review-card__answer">{(isPt && currentCard.answer_pt) || currentCard.answer}</div>
+
+            {/* example + diagram */}
+            {((isPt && currentCard.example_pt) || currentCard.example || getDiagram(currentCard.id)) && (
+              <div className="review-card__example">
+                <div className="review-card__example-label">{isPt ? "Exemplo" : "Example"}</div>
+                {((isPt && currentCard.example_pt) || currentCard.example) && (
+                  <pre className="qa-card__code">{(isPt && currentCard.example_pt) || currentCard.example}</pre>
+                )}
+                {getDiagram(currentCard.id) && (
+                  <div className="qa-card__diagram" style={{ marginTop: 8 }}>
+                    {getDiagram(currentCard.id)}
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="review-card__divider" />
             <div className="review-card__prompt">{t("session.howWell")}</div>
             <div className="review-card__ratings">

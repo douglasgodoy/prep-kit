@@ -13,6 +13,8 @@ export const SEED_TOPICS = [
         question_pt: "Como você projeta uma API RESTful com versionamento, idempotência e respostas de erro adequados?",
         answer: "Use plural nouns for resource endpoints, proper HTTP methods, and meaningful status codes like 201 Created or 422 Unprocessable Entity. URI-based versioning (/v1/) is the most common approach because it's explicit and easy to debug. For mutation endpoints, require an idempotency key header so retried requests don't duplicate side effects, and return consistent error shapes that never leak stack traces in production.",
         answer_pt: "Use substantivos no plural para endpoints de recursos, métodos HTTP corretos e status codes significativos como 201 Created ou 422 Unprocessable Entity. O versionamento via URI (/v1/) é a abordagem mais comum por ser explícita e fácil de depurar. Para endpoints de mutação, exija um header de idempotency key para que requisições repetidas não dupliquem efeitos colaterais, e retorne formatos de erro consistentes que nunca exponham stack traces em produção.",
+        example: "GET    /api/v1/users        — list users\nPOST   /api/v1/users        — create user\nGET    /api/v1/users/:id    — get user by id\nPUT    /api/v1/users/:id    — replace user\nPATCH  /api/v1/users/:id    — partial update\nDELETE /api/v1/users/:id    — remove user",
+        example_pt: "GET    /api/v1/users        — listar usuários\nPOST   /api/v1/users        — criar usuário\nGET    /api/v1/users/:id    — buscar usuário por id\nPUT    /api/v1/users/:id    — substituir usuário\nPATCH  /api/v1/users/:id    — atualização parcial\nDELETE /api/v1/users/:id    — remover usuário",
       },
       {
         id: "be2",
@@ -22,6 +24,8 @@ export const SEED_TOPICS = [
         question_pt: "Como você implementa autenticação e autorização usando JWT e OAuth 2.0?",
         answer: "JWTs are short-lived (15-30 minutes) signed tokens sent via Authorization Bearer headers, with longer-lived refresh tokens stored in HTTP-only cookies to mitigate XSS. OAuth 2.0 delegates auth to a third-party provider using the Authorization Code with PKCE flow for web apps. On the server, middleware validates the JWT signature, checks expiration, and attaches the decoded user before the route handler runs.",
         answer_pt: "JWTs são tokens assinados de curta duração (15-30 minutos) enviados via headers de Authorization Bearer, com refresh tokens de maior duração armazenados em cookies HTTP-only para mitigar XSS. O OAuth 2.0 delega a autenticação a um provedor terceiro usando o fluxo Authorization Code com PKCE para aplicações web. No servidor, um middleware valida a assinatura do JWT, verifica a expiração e anexa o usuário decodificado antes do route handler ser executado.",
+        example: "function authMiddleware(req, res, next) {\n  const token = req.headers.authorization?.split(' ')[1];\n  if (!token) return res.status(401).json({ error: 'No token' });\n  try {\n    const decoded = jwt.verify(token, process.env.JWT_SECRET);\n    req.user = decoded;\n    next();\n  } catch { return res.status(403).json({ error: 'Invalid token' }); }\n}",
+        example_pt: "function authMiddleware(req, res, next) {\n  const token = req.headers.authorization?.split(' ')[1];\n  if (!token) return res.status(401).json({ error: 'Sem token' });\n  try {\n    const decoded = jwt.verify(token, process.env.JWT_SECRET);\n    req.user = decoded; // anexa o usuário decodificado\n    next();\n  } catch { return res.status(403).json({ error: 'Token inválido' }); }\n}",
       },
       {
         id: "be3",
@@ -31,6 +35,8 @@ export const SEED_TOPICS = [
         question_pt: "Como você implementa o padrão Circuit Breaker em uma arquitetura de microsserviços?",
         answer: "A circuit breaker wraps calls to external services and tracks failures — after a threshold of consecutive failures, the circuit opens and rejects requests immediately without hitting the downstream service. After a cooldown it enters half-open state, allows a few test requests through, and closes again on success. In Node.js, opossum provides a ready-made implementation; combine it with exponential backoff plus jitter to avoid retry storms.",
         answer_pt: "Um circuit breaker encapsula chamadas a serviços externos e rastreia falhas — após um limite de falhas consecutivas, o circuito abre e rejeita requisições imediatamente sem atingir o serviço downstream. Após um período de cooldown, entra em estado half-open, permite algumas requisições de teste passarem e fecha novamente em caso de sucesso. No Node.js, o opossum oferece uma implementação pronta; combine-o com exponential backoff mais jitter para evitar retry storms.",
+        example: "CLOSED ──(failure threshold reached)──▸ OPEN\n  ▴                                        │\n  │                               (cooldown timer expires)\n  │                                        ▾\n  └──────(test request succeeds)──── HALF-OPEN\n                                      │\n                          (test request fails) ──▸ OPEN",
+        example_pt: "CLOSED ──(limite de falhas atingido)──▸ OPEN\n  ▴                                         │\n  │                              (timer de cooldown expira)\n  │                                         ▾\n  └──────(requisição de teste sucede)── HALF-OPEN\n                                         │\n                       (requisição de teste falha) ──▸ OPEN",
       },
       {
         id: "be4",
@@ -40,6 +46,8 @@ export const SEED_TOPICS = [
         question_pt: "Como você implementa tratamento de erros centralizado em uma aplicação Node.js/Express?",
         answer: "Register a four-parameter middleware (err, req, res, next) after all routes, and use an asyncHandler wrapper so rejected promises automatically forward to it via next(err). Distinguish operational errors from programmer errors — log full stacks for the latter, return sanitized responses to the client. Use process.on('unhandledRejection') and process.on('uncaughtException') as safety nets with graceful shutdown logic.",
         answer_pt: "Registre um middleware de quatro parâmetros (err, req, res, next) após todas as rotas, e use um wrapper asyncHandler para que promises rejeitadas sejam automaticamente encaminhadas via next(err). Diferencie erros operacionais de erros de programação — para os últimos, registre as stacks completas e retorne respostas sanitizadas ao cliente. Use process.on('unhandledRejection') e process.on('uncaughtException') como redes de segurança com lógica de graceful shutdown.",
+        example: "const asyncHandler = (fn) => (req, res, next) =>\n  Promise.resolve(fn(req, res, next)).catch(next);\n\n// usage\napp.get('/users', asyncHandler(async (req, res) => {\n  const users = await db.query('SELECT * FROM users');\n  res.json(users);\n}));",
+        example_pt: "const asyncHandler = (fn) => (req, res, next) =>\n  Promise.resolve(fn(req, res, next)).catch(next);\n\n// uso — promises rejeitadas são encaminhadas automaticamente\napp.get('/users', asyncHandler(async (req, res) => {\n  const users = await db.query('SELECT * FROM users');\n  res.json(users);\n}));",
       },
       {
         id: "be5",
@@ -49,6 +57,8 @@ export const SEED_TOPICS = [
         question_pt: "Quais estratégias de cache você usa e como lida com a invalidação de cache?",
         answer: "Cache-Aside is the most common pattern: check Redis first, fall back to the DB, then populate the cache. Invalidation is handled via TTL expiration or event-driven invalidation when data changes. Set explicit Cache-Control and ETag headers for HTTP caching so clients can use conditional requests to revalidate stale responses.",
         answer_pt: "Cache-Aside é o padrão mais comum: verifique o Redis primeiro, recorra ao banco de dados e então popule o cache. A invalidação é feita via expiração por TTL ou invalidação orientada a eventos quando os dados mudam. Defina headers explícitos de Cache-Control e ETag para caching HTTP para que os clientes possam usar requisições condicionais para revalidar respostas desatualizadas.",
+        example: "async function getUser(id) {\n  const cached = await redis.get(`user:${id}`);\n  if (cached) return JSON.parse(cached);\n\n  const user = await db.query('SELECT * FROM users WHERE id = $1', [id]);\n  await redis.set(`user:${id}`, JSON.stringify(user), 'EX', 3600);\n  return user;\n}",
+        example_pt: "async function getUser(id) {\n  const cached = await redis.get(`user:${id}`);\n  if (cached) return JSON.parse(cached); // cache hit\n\n  const user = await db.query('SELECT * FROM users WHERE id = $1', [id]);\n  await redis.set(`user:${id}`, JSON.stringify(user), 'EX', 3600); // TTL 1h\n  return user;\n}",
       },
       {
         id: "be6",
@@ -58,6 +68,8 @@ export const SEED_TOPICS = [
         question_pt: "Como você projeta schemas de banco de dados e otimiza queries para uma aplicação em produção?",
         answer: "Use normalized relational schemas when data integrity and joins matter, and denormalized document schemas when read performance and flexibility matter more. Indexing is the primary optimization tool — create composite indexes matching your most frequent query patterns and use EXPLAIN ANALYZE to find slow queries. For large datasets, cursor-based pagination outperforms offset-based, and connection pooling avoids the overhead of creating new connections per request.",
         answer_pt: "Use schemas relacionais normalizados quando integridade dos dados e joins importam, e schemas de documentos desnormalizados quando performance de leitura e flexibilidade são mais importantes. Indexação é a principal ferramenta de otimização — crie índices compostos que correspondam aos seus padrões de query mais frequentes e use EXPLAIN ANALYZE para encontrar queries lentas. Para grandes volumes de dados, paginação baseada em cursor supera a baseada em offset, e connection pooling evita o overhead de criar novas conexões por requisição.",
+        example: "// Prisma query using an indexed field for fast lookup\nconst orders = await prisma.order.findMany({\n  where: { userId: uid, status: 'PENDING' },\n  orderBy: { createdAt: 'desc' },\n  take: 20,\n  cursor: lastCursor ? { id: lastCursor } : undefined,\n});\n// @@index([userId, status, createdAt]) in schema.prisma",
+        example_pt: "// Query Prisma usando campo indexado para busca rápida\nconst orders = await prisma.order.findMany({\n  where: { userId: uid, status: 'PENDING' },\n  orderBy: { createdAt: 'desc' },\n  take: 20,\n  cursor: lastCursor ? { id: lastCursor } : undefined,\n});\n// @@index([userId, status, createdAt]) no schema.prisma",
       },
       {
         id: "be7",
@@ -67,6 +79,8 @@ export const SEED_TOPICS = [
         question_pt: "Como você implementa graceful shutdown em um serviço Node.js?",
         answer: "Listen for SIGTERM, call server.close() to stop accepting new connections, and let in-flight requests complete within a timeout before closing DB pools and message queue consumers. If the timeout expires, force exit with process.exit(1) to prevent hanging. Health check endpoints like /readyz should reflect the shutdown state so load balancers stop routing traffic to the draining instance.",
         answer_pt: "Escute o SIGTERM, chame server.close() para parar de aceitar novas conexões e deixe as requisições em andamento concluírem dentro de um timeout antes de fechar os pools de banco de dados e consumidores de fila de mensagens. Se o timeout expirar, force a saída com process.exit(1) para evitar que o processo trave. Endpoints de health check como /readyz devem refletir o estado de shutdown para que os load balancers parem de rotear tráfego para a instância em drenagem.",
+        example: "process.on('SIGTERM', () => {\n  console.log('SIGTERM received — shutting down gracefully');\n  server.close(async () => {\n    await db.pool.end();\n    await kafka.disconnect();\n    process.exit(0);\n  });\n  setTimeout(() => process.exit(1), 10_000); // force after 10s\n});",
+        example_pt: "process.on('SIGTERM', () => {\n  console.log('SIGTERM recebido — encerrando graciosamente');\n  server.close(async () => {\n    await db.pool.end();       // fecha pool de conexões\n    await kafka.disconnect();  // fecha consumidores\n    process.exit(0);\n  });\n  setTimeout(() => process.exit(1), 10_000); // força após 10s\n});",
       },
       {
         id: "be8",
@@ -76,6 +90,8 @@ export const SEED_TOPICS = [
         question_pt: "Como você implementa Dependency Injection em uma aplicação Node.js/TypeScript?",
         answer: "Dependency Injection means a class receives its dependencies as constructor parameters rather than creating them internally, enabling loose coupling and easy unit testing with mocks. In TypeScript, frameworks like NestJS or InversifyJS use decorators and reflection metadata to resolve dependencies automatically. Even without a framework, manual constructor injection at the composition root is effective and keeps code testable.",
         answer_pt: "Dependency Injection significa que uma classe recebe suas dependências como parâmetros do construtor em vez de criá-las internamente, possibilitando baixo acoplamento e testes unitários fáceis com mocks. No TypeScript, frameworks como NestJS ou InversifyJS usam decorators e reflection metadata para resolver dependências automaticamente. Mesmo sem um framework, a injeção manual via construtor na raiz de composição é eficaz e mantém o código testável.",
+        example: "class OrderService {\n  constructor(\n    private readonly repo: OrderRepository,\n    private readonly mailer: MailService,\n  ) {}\n\n  async place(dto: CreateOrderDto) {\n    const order = await this.repo.save(dto);\n    await this.mailer.sendConfirmation(order);\n    return order;\n  }\n}\n// In tests: new OrderService(mockRepo, mockMailer)",
+        example_pt: "class OrderService {\n  constructor(\n    private readonly repo: OrderRepository,\n    private readonly mailer: MailService,\n  ) {}\n\n  async place(dto: CreateOrderDto) {\n    const order = await this.repo.save(dto);\n    await this.mailer.sendConfirmation(order);\n    return order;\n  }\n}\n// Nos testes: new OrderService(mockRepo, mockMailer)",
       },
     ],
   },
@@ -93,6 +109,8 @@ export const SEED_TOPICS = [
         question_pt: "Como os Generics funcionam no TypeScript e como você os restringe?",
         answer: "Generics parameterize types so a function or class works with multiple types without losing type information. You constrain them with the extends keyword — for example, T extends { length: number } — which is fundamentally different from any because the compiler still tracks the actual type throughout the function body. A practical example is a generic merge function typed as merge<T extends object, U extends object>(a: T, b: U): T & U.",
         answer_pt: "Generics parametrizam tipos para que uma função ou classe funcione com múltiplos tipos sem perder informações de tipo. Você os restringe com a palavra-chave extends — por exemplo, T extends { length: number } — o que é fundamentalmente diferente de any porque o compilador ainda rastreia o tipo real ao longo do corpo da função. Um exemplo prático é uma função merge genérica tipada como merge<T extends object, U extends object>(a: T, b: U): T & U.",
+        example: "function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {\n  return obj[key];\n}\n\nconst user = { name: 'Ana', age: 28 };\ngetProperty(user, 'name');  // ✅ string\ngetProperty(user, 'email'); // ❌ compile error",
+        example_pt: "function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {\n  return obj[key];\n}\n\nconst user = { name: 'Ana', age: 28 };\ngetProperty(user, 'name');  // ✅ retorna string\ngetProperty(user, 'email'); // ❌ erro de compilação",
       },
       {
         id: "ts2",
@@ -102,6 +120,8 @@ export const SEED_TOPICS = [
         question_pt: "Explique a diferença entre `type` e `interface`. Quando você usaria um em vez do outro?",
         answer: "Interfaces support declaration merging, making them ideal for library augmentation and contracts that consumers extend. Type aliases can represent unions, intersections, mapped types, and primitives — things interfaces cannot. Use interface for public API surfaces you expect to be extended, and type for unions and advanced type-level computations.",
         answer_pt: "Interfaces suportam declaration merging, tornando-as ideais para augmentação de bibliotecas e contratos que consumidores estendem. Type aliases podem representar unions, intersections, mapped types e primitivos — coisas que interfaces não conseguem. Use interface para superfícies de API pública que você espera que sejam estendidas, e type para unions e computações avançadas em nível de tipo.",
+        example: "// interface — declaration merging works\ninterface User { name: string; }\ninterface User { age: number; }  // merges into { name, age }\n\n// type — unions and intersections\ntype Result = Success | Failure;\ntype Admin = User & { role: 'admin' };",
+        example_pt: "// interface — declaration merging funciona\ninterface User { name: string; }\ninterface User { age: number; }  // merge em { name, age }\n\n// type — unions e intersections\ntype Result = Success | Failure;\ntype Admin = User & { role: 'admin' };",
       },
       {
         id: "ts3",
@@ -111,6 +131,8 @@ export const SEED_TOPICS = [
         question_pt: "O que são Conditional Types e como a palavra-chave `infer` funciona?",
         answer: "Conditional types follow T extends U ? X : Y — if T is assignable to U, resolve to X, otherwise Y. The infer keyword captures a type from a pattern inside the condition, like type ReturnType<T> = T extends (...args: any[]) => infer R ? R : never to extract a function's return type. When applied to a union, conditional types distribute over each member automatically.",
         answer_pt: "Conditional types seguem T extends U ? X : Y — se T é atribuível a U, resolve para X, caso contrário Y. A palavra-chave infer captura um tipo de um padrão dentro da condição, como type ReturnType<T> = T extends (...args: any[]) => infer R ? R : never para extrair o tipo de retorno de uma função. Quando aplicados a uma union, conditional types se distribuem sobre cada membro automaticamente.",
+        example: "type MyReturnType<T> = T extends (...args: any[]) => infer R\n  ? R\n  : never;\n\ntype Str = MyReturnType<() => string>;        // string\ntype Num = MyReturnType<(x: number) => number>; // number",
+        example_pt: "type MyReturnType<T> = T extends (...args: any[]) => infer R\n  ? R     // captura o tipo de retorno\n  : never;\n\ntype Str = MyReturnType<() => string>;        // string\ntype Num = MyReturnType<(x: number) => number>; // number",
       },
       {
         id: "ts4",
@@ -120,6 +142,8 @@ export const SEED_TOPICS = [
         question_pt: "O que são Type Guards e como você escreve um type guard personalizado?",
         answer: "Type guards narrow a variable's type inside a conditional block. Built-ins include typeof, instanceof, and the in operator. A custom type guard is a function whose return type is a type predicate — function isString(value: unknown): value is string — so TypeScript narrows the variable in the truthy branch. They're essential when working with discriminated unions and untyped API responses.",
         answer_pt: "Type guards restringem o tipo de uma variável dentro de um bloco condicional. Os built-ins incluem typeof, instanceof e o operador in. Um type guard personalizado é uma função cujo tipo de retorno é um predicado de tipo — function isString(value: unknown): value is string — para que o TypeScript restrinja a variável no branch verdadeiro. Eles são essenciais ao trabalhar com discriminated unions e respostas de API sem tipagem.",
+        example: "interface Fish { swim(): void; }\ninterface Bird { fly(): void; }\n\nfunction isFish(pet: Fish | Bird): pet is Fish {\n  return (pet as Fish).swim !== undefined;\n}\n\nconst pet: Fish | Bird = getAnimal();\nif (isFish(pet)) pet.swim(); // ✅ narrowed to Fish",
+        example_pt: "interface Fish { swim(): void; }\ninterface Bird { fly(): void; }\n\nfunction isFish(pet: Fish | Bird): pet is Fish {\n  return (pet as Fish).swim !== undefined;\n}\n\nconst pet: Fish | Bird = getAnimal();\nif (isFish(pet)) pet.swim(); // ✅ narrowed para Fish",
       },
       {
         id: "ts5",
@@ -129,6 +153,8 @@ export const SEED_TOPICS = [
         question_pt: "Quais são os principais Utility Types do TypeScript e quando você os usa?",
         answer: "The most commonly used are Partial<T> for update/patch functions, Pick and Omit for shaping subsets of a type, and Record<K, V> for typed dictionaries. More advanced ones like ReturnType<T> and Parameters<T> extract function signatures, and Extract/Exclude filter union members. Interviewers expect you to know how these are implemented internally using mapped and conditional types.",
         answer_pt: "Os mais usados são Partial<T> para funções de update/patch, Pick e Omit para moldar subconjuntos de um tipo, e Record<K, V> para dicionários tipados. Os mais avançados como ReturnType<T> e Parameters<T> extraem assinaturas de funções, e Extract/Exclude filtram membros de unions. Em entrevistas, espera-se que você saiba como eles são implementados internamente usando mapped types e conditional types.",
+        example: "interface User { id: number; name: string; email: string; role: string; }\n\ntype UpdatePayload = Partial<Omit<User, 'id'>>;\n// { name?: string; email?: string; role?: string; }\n\nfunction updateUser(id: number, data: UpdatePayload) { /* ... */ }\nupdateUser(1, { name: 'Ana' }); // ✅ only name is enough",
+        example_pt: "interface User { id: number; name: string; email: string; role: string; }\n\ntype UpdatePayload = Partial<Omit<User, 'id'>>;\n// { name?: string; email?: string; role?: string; }\n\nfunction updateUser(id: number, data: UpdatePayload) { /* ... */ }\nupdateUser(1, { name: 'Ana' }); // ✅ apenas name é suficiente",
       },
       {
         id: "ts6",
@@ -138,6 +164,8 @@ export const SEED_TOPICS = [
         question_pt: "O que são Mapped Types e como você os usa para transformar tipos existentes?",
         answer: "Mapped types iterate over the keys of an existing type using { [K in keyof T]: ... } to produce a new type with transformed properties. You can add or remove modifiers like readonly and ? using + or - prefixes. Built-in utility types like Partial, Required, and Readonly are all implemented as mapped types, and the as clause (TS 4.1+) lets you remap keys to generate things like getter-style method signatures.",
         answer_pt: "Mapped types iteram sobre as chaves de um tipo existente usando { [K in keyof T]: ... } para produzir um novo tipo com propriedades transformadas. Você pode adicionar ou remover modificadores como readonly e ? usando prefixos + ou -. Utility types built-in como Partial, Required e Readonly são todos implementados como mapped types, e a cláusula as (TS 4.1+) permite remapear chaves para gerar coisas como assinaturas de métodos no estilo getter.",
+        example: "type Getters<T> = {\n  [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K];\n};\n\ninterface Person { name: string; age: number; }\ntype PersonGetters = Getters<Person>;\n// { getName: () => string; getAge: () => number; }",
+        example_pt: "type Getters<T> = {\n  [K in keyof T as `get${Capitalize<string & K>}`]: () => T[K];\n};\n\ninterface Person { name: string; age: number; }\ntype PersonGetters = Getters<Person>;\n// { getName: () => string; getAge: () => number; }",
       },
       {
         id: "ts7",
@@ -147,6 +175,8 @@ export const SEED_TOPICS = [
         question_pt: "Enums vs. Union Types: qual você prefere e por quê?",
         answer: "Enums emit runtime JavaScript objects, which adds bundle size, while string literal unions like type Status = 'active' | 'inactive' are fully erased at compile time with zero runtime overhead. The modern best practice is to prefer string literal unions — they're lighter, more predictable, and integrate better with discriminated unions and exhaustiveness checks.",
         answer_pt: "Enums emitem objetos JavaScript em tempo de execução, o que aumenta o bundle, enquanto unions de literais de string como type Status = 'active' | 'inactive' são completamente apagadas em tempo de compilação com zero overhead em runtime. A melhor prática moderna é preferir unions de literais de string — são mais leves, mais previsíveis e se integram melhor com discriminated unions e verificações de exhaustividade.",
+        example: "// ❌ enum — emits runtime JS object\nenum Status { Active = 'active', Inactive = 'inactive' }\n\n// ✅ string literal union — zero runtime cost\ntype Status = 'active' | 'inactive';\n\nconst s: Status = 'active'; // autocomplete works, fully type-safe",
+        example_pt: "// ❌ enum — emite objeto JS em runtime\nenum Status { Active = 'active', Inactive = 'inactive' }\n\n// ✅ union de literais — zero custo em runtime\ntype Status = 'active' | 'inactive';\n\nconst s: Status = 'active'; // autocomplete funciona, totalmente type-safe",
       },
       {
         id: "ts8",
@@ -156,6 +186,8 @@ export const SEED_TOPICS = [
         question_pt: "O que são Discriminated Unions e como elas possibilitam a verificação de exhaustividade?",
         answer: "A discriminated union is a union of types sharing a common literal property (the discriminant), like type Shape = { kind: 'circle'; radius: number } | { kind: 'square'; side: number }. TypeScript narrows the type automatically in each switch branch. Adding a never assignment in the default case gives you compile-time exhaustiveness checking — if you add a new variant and forget to handle it, the compiler errors.",
         answer_pt: "Uma discriminated union é uma union de tipos que compartilham uma propriedade literal em comum (o discriminante), como type Shape = { kind: 'circle'; radius: number } | { kind: 'square'; side: number }. O TypeScript restringe o tipo automaticamente em cada branch do switch. Adicionar uma atribuição never no caso default fornece verificação de exhaustividade em tempo de compilação — se você adicionar uma nova variante e esquecer de tratá-la, o compilador gera um erro.",
+        example: "type Shape =\n  | { kind: 'circle'; radius: number }\n  | { kind: 'square'; side: number };\n\nfunction area(s: Shape): number {\n  switch (s.kind) {\n    case 'circle': return Math.PI * s.radius ** 2;\n    case 'square': return s.side ** 2;\n    default: const _: never = s; return _; // exhaustiveness check\n  }\n}",
+        example_pt: "type Shape =\n  | { kind: 'circle'; radius: number }\n  | { kind: 'square'; side: number };\n\nfunction area(s: Shape): number {\n  switch (s.kind) {\n    case 'circle': return Math.PI * s.radius ** 2;\n    case 'square': return s.side ** 2;\n    default: const _: never = s; return _; // verificação de exhaustividade\n  }\n}",
       },
       {
         id: "ts9",
@@ -165,6 +197,8 @@ export const SEED_TOPICS = [
         question_pt: "O que o modo `strict` do TypeScript habilita e por que ele é importante?",
         answer: "The strict flag bundles several checks, the most impactful being strictNullChecks, which makes null and undefined distinct types and eliminates an entire class of runtime errors by forcing you to handle them explicitly. It also enables strictFunctionTypes for contravariant parameter checking and strictPropertyInitialization. Enabling strict from the start is strongly recommended — retrofitting it onto a large codebase surfaces hundreds of latent type errors.",
         answer_pt: "A flag strict agrupa várias verificações, sendo a mais impactante o strictNullChecks, que torna null e undefined tipos distintos e elimina toda uma classe de erros em runtime ao forçar o tratamento explícito deles. Também habilita strictFunctionTypes para verificação contravariante de parâmetros e strictPropertyInitialization. Habilitar strict desde o início é fortemente recomendado — aplicá-lo retroativamente a um codebase grande expõe centenas de erros de tipo latentes.",
+        example: "// WITHOUT strictNullChecks — compiles but crashes at runtime\nfunction greet(name: string) { return name.toUpperCase(); }\ngreet(undefined); // runtime error\n\n// WITH strictNullChecks — caught at compile time\nfunction greet(name: string | undefined) {\n  if (!name) return 'Guest';\n  return name.toUpperCase(); // ✅ safe\n}",
+        example_pt: "// SEM strictNullChecks — compila mas crasha em runtime\nfunction greet(name: string) { return name.toUpperCase(); }\ngreet(undefined); // erro em runtime\n\n// COM strictNullChecks — capturado em tempo de compilação\nfunction greet(name: string | undefined) {\n  if (!name) return 'Guest';\n  return name.toUpperCase(); // ✅ seguro\n}",
       },
       {
         id: "ts10",
@@ -174,6 +208,8 @@ export const SEED_TOPICS = [
         question_pt: "Como o sistema de módulos do TypeScript funciona e qual é a diferença entre `import type` e um `import` regular?",
         answer: "import type is a type-only import that is completely erased during compilation, producing no runtime JavaScript — important for avoiding circular dependency issues and reducing bundle size. Since TypeScript 5.0, verbatimModuleSyntax enforces that type-only imports are explicitly marked. Understanding the boundary between type-space and value-space imports is a key signal of senior-level TypeScript fluency.",
         answer_pt: "import type é uma importação exclusiva de tipo que é completamente apagada durante a compilação, não produzindo nenhum JavaScript em runtime — importante para evitar problemas de dependência circular e reduzir o bundle. Desde o TypeScript 5.0, verbatimModuleSyntax garante que importações somente de tipo sejam explicitamente marcadas. Entender a fronteira entre importações de tipo e de valor é um sinal-chave de fluência em TypeScript em nível sênior.",
+        example: "// Regular import — included in compiled JS\nimport { UserService } from './user.service';\n\n// Type-only import — completely erased at compile time\nimport type { User } from './user.model';\n\nfunction handle(svc: UserService, u: User) { /* ... */ }",
+        example_pt: "// Import regular — incluído no JS compilado\nimport { UserService } from './user.service';\n\n// Import somente de tipo — completamente apagado na compilação\nimport type { User } from './user.model';\n\nfunction handle(svc: UserService, u: User) { /* ... */ }",
       },
     ],
   },
@@ -191,6 +227,8 @@ export const SEED_TOPICS = [
         question_pt: "O que é o Virtual DOM e como funciona o algoritmo de reconciliação do React?",
         answer: "The Virtual DOM is a lightweight in-memory representation of the real DOM. When state changes, React diffs the new Virtual DOM tree against the previous one using its Fiber-based reconciliation algorithm, using element type and key props to identify what changed. This runs in O(n) time and produces a minimal set of real DOM mutations instead of re-rendering everything.",
         answer_pt: "O Virtual DOM é uma representação leve em memória do DOM real. Quando o estado muda, o React compara a nova árvore do Virtual DOM com a anterior usando seu algoritmo de reconciliação baseado em Fiber, usando o tipo do elemento e a prop key para identificar o que mudou. Isso roda em tempo O(n) e produz um conjunto mínimo de mutações no DOM real em vez de re-renderizar tudo.",
+        example: "// ❌ Without key — React re-creates all items on reorder\n{items.map(item => <li>{item.name}</li>)}\n\n// ✅ With key — React tracks and moves DOM nodes efficiently\n{items.map(item => <li key={item.id}>{item.name}</li>)}",
+        example_pt: "// ❌ Sem key — React recria todos os itens ao reordenar\n{items.map(item => <li>{item.name}</li>)}\n\n// ✅ Com key — React rastreia e move nós do DOM eficientemente\n{items.map(item => <li key={item.id}>{item.name}</li>)}",
       },
       {
         id: "re2",
@@ -200,6 +238,8 @@ export const SEED_TOPICS = [
         question_pt: "Explique as regras e a mecânica interna dos React Hooks. Por que você não pode chamar hooks dentro de condicionais ou loops?",
         answer: "React stores hook values as a linked list on each component's Fiber node. On every render, it walks this list in order, so the calling sequence must be identical between renders. If a hook is inside a condition or loop, the call order can change, causing React to map state to the wrong hook — which is why the Rules of Hooks require hooks to always be called at the top level.",
         answer_pt: "O React armazena os valores dos hooks como uma linked list no nó Fiber de cada componente. A cada renderização, ele percorre essa lista em ordem, portanto a sequência de chamadas deve ser idêntica entre renderizações. Se um hook estiver dentro de uma condicional ou loop, a ordem de chamada pode mudar, fazendo o React mapear o estado para o hook errado — por isso as Regras dos Hooks exigem que os hooks sempre sejam chamados no nível superior.",
+        example: "// ❌ WRONG — hook inside a condition changes call order\nfunction Profile({ loggedIn }) {\n  if (loggedIn) {\n    const [name, setName] = useState(''); // hook #1 sometimes\n  }\n  const [age, setAge] = useState(0); // hook #1 or #2??\n}\n\n// ✅ CORRECT — always call at top level\nfunction Profile({ loggedIn }) {\n  const [name, setName] = useState('');  // always hook #1\n  const [age, setAge] = useState(0);     // always hook #2\n}",
+        example_pt: "// ❌ ERRADO — hook dentro de condição altera a ordem de chamada\nfunction Profile({ loggedIn }) {\n  if (loggedIn) {\n    const [name, setName] = useState(''); // hook #1 às vezes\n  }\n  const [age, setAge] = useState(0); // hook #1 ou #2??\n}\n\n// ✅ CORRETO — sempre chame no nível superior\nfunction Profile({ loggedIn }) {\n  const [name, setName] = useState('');  // sempre hook #1\n  const [age, setAge] = useState(0);     // sempre hook #2\n}",
       },
       {
         id: "re3",
@@ -209,6 +249,8 @@ export const SEED_TOPICS = [
         question_pt: "Qual é a diferença entre `useMemo` e `useCallback`, e quando você deve usar cada um?",
         answer: "useMemo memoizes a computed value, ideal for expensive calculations like filtering large arrays. useCallback memoizes a function reference, which matters when passing callbacks to child components wrapped in React.memo — since a new function reference on every render would break the memo check. Don't apply either prematurely; the memoization itself has a cost.",
         answer_pt: "useMemo memoiza um valor computado, ideal para cálculos custosos como filtrar arrays grandes. useCallback memoiza uma referência de função, o que importa ao passar callbacks para componentes filhos encapsulados em React.memo — já que uma nova referência de função a cada renderização quebraria a verificação do memo. Não aplique nenhum dos dois prematuramente; a própria memoização tem um custo.",
+        example: "const ExpensiveList = React.memo(({ items, onSelect }) => (\n  <ul>{items.map(i => <li key={i.id} onClick={() => onSelect(i)}>{i.name}</li>)}</ul>\n));\n\nfunction Parent({ data }) {\n  const filtered = useMemo(() => data.filter(d => d.active), [data]);\n  const onSelect = useCallback((item) => console.log(item), []);\n  return <ExpensiveList items={filtered} onSelect={onSelect} />;\n}",
+        example_pt: "const ExpensiveList = React.memo(({ items, onSelect }) => (\n  <ul>{items.map(i => <li key={i.id} onClick={() => onSelect(i)}>{i.name}</li>)}</ul>\n));\n\nfunction Parent({ data }) {\n  const filtered = useMemo(() => data.filter(d => d.active), [data]);\n  const onSelect = useCallback((item) => console.log(item), []);\n  return <ExpensiveList items={filtered} onSelect={onSelect} />;\n  // sem useCallback, onSelect seria uma nova referência a cada render\n}",
       },
       {
         id: "re4",
@@ -218,6 +260,8 @@ export const SEED_TOPICS = [
         question_pt: "Como o `useEffect` funciona, incluindo sua função de cleanup e o array de dependências?",
         answer: "useEffect synchronizes a component with an external system and runs after the browser paints, so it doesn't block the UI. An empty dependency array means it runs only on mount; specific values cause it to re-run when those values change. The cleanup function runs before unmount and before the effect re-executes, preventing memory leaks from subscriptions or timers.",
         answer_pt: "useEffect sincroniza um componente com um sistema externo e é executado após o navegador renderizar, portanto não bloqueia a UI. Um array de dependências vazio significa que ele roda apenas na montagem; valores específicos fazem com que seja re-executado quando esses valores mudam. A função de cleanup roda antes da desmontagem e antes de o efeito ser re-executado, evitando memory leaks de subscriptions ou timers.",
+        example: "useEffect(() => {\n  const ws = new WebSocket('wss://api.example.com/feed');\n  ws.onmessage = (e) => setMessages(prev => [...prev, e.data]);\n\n  return () => ws.close(); // cleanup: close connection on unmount\n}, []); // empty array → run once on mount",
+        example_pt: "useEffect(() => {\n  const ws = new WebSocket('wss://api.example.com/feed');\n  ws.onmessage = (e) => setMessages(prev => [...prev, e.data]);\n\n  return () => ws.close(); // cleanup: fecha conexão na desmontagem\n}, []); // array vazio → roda uma vez na montagem",
       },
       {
         id: "re5",
@@ -227,6 +271,8 @@ export const SEED_TOPICS = [
         question_pt: "Quais são os recursos de renderização concorrente do React 18 e como `useTransition` e `startTransition` funcionam?",
         answer: "React 18's concurrent rendering makes the process interruptible — high-priority updates like typing can pause lower-priority ones like filtering a large list. useTransition returns an isPending flag and a startTransition function that marks state updates as non-urgent, keeping the UI responsive. React 18 also introduced automatic batching, which groups multiple state updates into a single re-render even inside promises and timeouts.",
         answer_pt: "A renderização concorrente do React 18 torna o processo interrompível — atualizações de alta prioridade como digitação podem pausar as de baixa prioridade como filtrar uma lista grande. useTransition retorna uma flag isPending e uma função startTransition que marca atualizações de estado como não urgentes, mantendo a UI responsiva. O React 18 também introduziu o batching automático, que agrupa múltiplas atualizações de estado em uma única re-renderização mesmo dentro de promises e timeouts.",
+        example: "function Search({ data }) {\n  const [query, setQuery] = useState('');\n  const [filtered, setFiltered] = useState(data);\n  const [isPending, startTransition] = useTransition();\n\n  const onChange = (e) => {\n    setQuery(e.target.value);            // high priority — update input\n    startTransition(() => {\n      setFiltered(data.filter(d => d.name.includes(e.target.value))); // low priority\n    });\n  };\n  return <>{isPending && <Spinner />}<List items={filtered} /></>;\n}",
+        example_pt: "function Search({ data }) {\n  const [query, setQuery] = useState('');\n  const [filtered, setFiltered] = useState(data);\n  const [isPending, startTransition] = useTransition();\n\n  const onChange = (e) => {\n    setQuery(e.target.value);            // alta prioridade — atualiza input\n    startTransition(() => {\n      setFiltered(data.filter(d => d.name.includes(e.target.value))); // baixa prioridade\n    });\n  };\n  return <>{isPending && <Spinner />}<List items={filtered} /></>;\n}",
       },
       {
         id: "re6",
@@ -236,6 +282,8 @@ export const SEED_TOPICS = [
         question_pt: "O que é o React Suspense e como ele se relaciona com code splitting e busca de dados?",
         answer: "Suspense lets components declare they're waiting for async data, showing a fallback UI until ready. Combined with React.lazy(), it enables code splitting with automatic loading states when a chunk hasn't loaded yet. In React 18+, Suspense integrates with streaming SSR so the server can flush HTML progressively, and frameworks like Next.js and TanStack Query use Suspense-compatible data fetching.",
         answer_pt: "Suspense permite que componentes declarem que estão aguardando dados assíncronos, exibindo uma UI de fallback até estarem prontos. Combinado com React.lazy(), ele habilita code splitting com estados de carregamento automáticos quando um chunk ainda não foi carregado. No React 18+, o Suspense se integra com streaming SSR para que o servidor possa enviar HTML progressivamente, e frameworks como Next.js e TanStack Query usam busca de dados compatível com Suspense.",
+        example: "const Dashboard = React.lazy(() => import('./Dashboard'));\n\nfunction App() {\n  return (\n    <Suspense fallback={<Spinner />}>\n      <Dashboard />  {/* loads chunk on demand, shows Spinner while loading */}\n    </Suspense>\n  );\n}",
+        example_pt: "const Dashboard = React.lazy(() => import('./Dashboard'));\n\nfunction App() {\n  return (\n    <Suspense fallback={<Spinner />}>\n      <Dashboard />  {/* carrega o chunk sob demanda, mostra Spinner enquanto carrega */}\n    </Suspense>\n  );\n}",
       },
       {
         id: "re7",
@@ -245,6 +293,8 @@ export const SEED_TOPICS = [
         question_pt: "Como você otimiza a performance em uma aplicação React que renderiza grandes volumes de dados?",
         answer: "For large lists, use windowing libraries like react-window or react-virtuoso to render only visible items, dramatically reducing DOM nodes. React.memo prevents unnecessary re-renders of pure components, and useMemo stabilizes expensive derived data. At the architecture level, colocating state close to where it's used and lazy loading routes with React.lazy are the most impactful structural improvements.",
         answer_pt: "Para listas grandes, use bibliotecas de windowing como react-window ou react-virtuoso para renderizar apenas os itens visíveis, reduzindo drasticamente os nós do DOM. React.memo evita re-renderizações desnecessárias de componentes puros, e useMemo estabiliza dados derivados custosos. No nível de arquitetura, colocar o estado próximo a onde ele é usado e fazer lazy loading de rotas com React.lazy são as melhorias estruturais mais impactantes.",
+        example: "import { FixedSizeList } from 'react-window';\n\nfunction UserList({ users }) {\n  const Row = ({ index, style }) => (\n    <div style={style}>{users[index].name}</div>\n  );\n  return (\n    <FixedSizeList height={600} itemCount={users.length} itemSize={50} width=\"100%\">\n      {Row}\n    </FixedSizeList>\n  ); // renders only ~12 visible rows instead of 10,000 DOM nodes\n}",
+        example_pt: "import { FixedSizeList } from 'react-window';\n\nfunction UserList({ users }) {\n  const Row = ({ index, style }) => (\n    <div style={style}>{users[index].name}</div>\n  );\n  return (\n    <FixedSizeList height={600} itemCount={users.length} itemSize={50} width=\"100%\">\n      {Row}\n    </FixedSizeList>\n  ); // renderiza apenas ~12 linhas visíveis em vez de 10.000 nós no DOM\n}",
       },
       {
         id: "re8",
@@ -254,6 +304,8 @@ export const SEED_TOPICS = [
         question_pt: "Explique HOCs, render props e compound components. Quando você usaria cada um?",
         answer: "HOCs wrap a component to add behavior like auth or theming, but can lead to wrapper hell — custom hooks have largely replaced them for logic reuse. Compound components like Tabs and Tabs.Panel use React Context internally so related children share implicit state without prop drilling, making them the preferred pattern for flexible UI APIs. Render props are a middle ground but rarely the cleanest solution in modern React.",
         answer_pt: "HOCs encapsulam um componente para adicionar comportamentos como autenticação ou theming, mas podem levar ao wrapper hell — custom hooks os substituíram em grande parte para reutilização de lógica. Compound components como Tabs e Tabs.Panel usam React Context internamente para que filhos relacionados compartilhem estado implícito sem prop drilling, tornando-os o padrão preferido para APIs de UI flexíveis. Render props são uma solução intermediária, mas raramente a mais limpa no React moderno.",
+        example: "function Tabs({ children }) {\n  const [active, setActive] = useState(0);\n  return <TabsContext.Provider value={{ active, setActive }}>{children}</TabsContext.Provider>;\n}\nTabs.Tab = ({ index, children }) => {\n  const { active, setActive } = useContext(TabsContext);\n  return <button onClick={() => setActive(index)} className={active === index ? 'active' : ''}>{children}</button>;\n};\nTabs.Panel = ({ index, children }) => {\n  const { active } = useContext(TabsContext);\n  return active === index ? <div>{children}</div> : null;\n};",
+        example_pt: "function Tabs({ children }) {\n  const [active, setActive] = useState(0);\n  return <TabsContext.Provider value={{ active, setActive }}>{children}</TabsContext.Provider>;\n}\nTabs.Tab = ({ index, children }) => {\n  const { active, setActive } = useContext(TabsContext);\n  return <button onClick={() => setActive(index)} className={active === index ? 'active' : ''}>{children}</button>;\n};\nTabs.Panel = ({ index, children }) => {\n  const { active } = useContext(TabsContext);\n  return active === index ? <div>{children}</div> : null;\n};\n// Uso: <Tabs><Tabs.Tab index={0}>Aba 1</Tabs.Tab><Tabs.Panel index={0}>Conteúdo</Tabs.Panel></Tabs>",
       },
       {
         id: "re9",
@@ -263,6 +315,8 @@ export const SEED_TOPICS = [
         question_pt: "O que é `useRef` e como ele difere do estado? Quais são seus casos de uso mais comuns?",
         answer: "useRef returns a mutable object with a .current property that persists across renders without triggering a re-render when it changes, unlike useState. It's most commonly used to hold a DOM element reference for things like focusing an input, but also works as an instance variable for storing interval IDs or previous values. The key rule is to avoid reading or writing ref.current during rendering itself.",
         answer_pt: "useRef retorna um objeto mutável com uma propriedade .current que persiste entre renderizações sem disparar uma re-renderização quando muda, ao contrário do useState. É mais comumente usado para armazenar uma referência a um elemento DOM para coisas como focar um input, mas também funciona como uma variável de instância para armazenar IDs de intervalos ou valores anteriores. A regra principal é evitar ler ou escrever em ref.current durante a própria renderização.",
+        example: "function SearchInput() {\n  const inputRef = useRef(null);\n\n  useEffect(() => {\n    inputRef.current.focus(); // auto-focus on mount\n  }, []);\n\n  return <input ref={inputRef} placeholder=\"Search...\" />;\n}",
+        example_pt: "function SearchInput() {\n  const inputRef = useRef(null);\n\n  useEffect(() => {\n    inputRef.current.focus(); // auto-focus na montagem\n  }, []);\n\n  return <input ref={inputRef} placeholder=\"Buscar...\" />;\n}",
       },
       {
         id: "re10",
@@ -272,6 +326,8 @@ export const SEED_TOPICS = [
         question_pt: "Como você projeta e constrói custom hooks, e quais princípios devem guiar sua arquitetura?",
         answer: "Custom hooks are functions prefixed with use that encapsulate reusable stateful logic by composing built-in hooks. A well-designed hook like useFetch or useDebounce follows single responsibility, returns only what the consumer needs, and handles cleanup properly to prevent memory leaks. Keeping the API surface small and using TypeScript generics for type safety are the main design principles.",
         answer_pt: "Custom hooks são funções prefixadas com use que encapsulam lógica stateful reutilizável compondo hooks built-in. Um hook bem projetado como useFetch ou useDebounce segue o princípio de responsabilidade única, retorna apenas o que o consumidor precisa e lida com o cleanup corretamente para evitar memory leaks. Manter a superfície da API pequena e usar generics do TypeScript para segurança de tipos são os principais princípios de design.",
+        example: "function useFetch<T>(url: string) {\n  const [data, setData] = useState<T | null>(null);\n  const [loading, setLoading] = useState(true);\n  const [error, setError] = useState<Error | null>(null);\n\n  useEffect(() => {\n    const ctrl = new AbortController();\n    fetch(url, { signal: ctrl.signal })\n      .then(r => r.json()).then(setData).catch(setError).finally(() => setLoading(false));\n    return () => ctrl.abort(); // cleanup on unmount or url change\n  }, [url]);\n\n  return { data, loading, error };\n}",
+        example_pt: "function useFetch<T>(url: string) {\n  const [data, setData] = useState<T | null>(null);\n  const [loading, setLoading] = useState(true);\n  const [error, setError] = useState<Error | null>(null);\n\n  useEffect(() => {\n    const ctrl = new AbortController();\n    fetch(url, { signal: ctrl.signal })\n      .then(r => r.json()).then(setData).catch(setError).finally(() => setLoading(false));\n    return () => ctrl.abort(); // cleanup na desmontagem ou mudança de url\n  }, [url]);\n\n  return { data, loading, error };\n}",
       },
     ],
   },
@@ -289,6 +345,8 @@ export const SEED_TOPICS = [
         question_pt: "Explique o Event Loop do Node.js e suas fases.",
         answer: "The event loop processes async operations across six phases: Timers, Pending Callbacks, Poll (retrieving new I/O events), Check (setImmediate), and Close Callbacks. Between each phase, Node.js drains the nextTick queue and the microtask queue (Promises), which always run before advancing to the next phase. Misusing this leads to I/O starvation or unexpected execution order.",
         answer_pt: "O event loop processa operações assíncronas em seis fases: Timers, Pending Callbacks, Poll (recuperar novos eventos de I/O), Check (setImmediate) e Close Callbacks. Entre cada fase, o Node.js esgota a fila do nextTick e a fila de microtasks (Promises), que sempre rodam antes de avançar para a próxima fase. O mau uso disso leva ao I/O starvation ou a ordens de execução inesperadas.",
+        example: "setTimeout(() => console.log('1: timer'), 0);\nsetImmediate(() => console.log('2: immediate'));\nPromise.resolve().then(() => console.log('3: microtask'));\nprocess.nextTick(() => console.log('4: nextTick'));\n\n// Output: 4: nextTick → 3: microtask → 1: timer → 2: immediate",
+        example_pt: "setTimeout(() => console.log('1: timer'), 0);\nsetImmediate(() => console.log('2: immediate'));\nPromise.resolve().then(() => console.log('3: microtask'));\nprocess.nextTick(() => console.log('4: nextTick'));\n\n// Saída: 4: nextTick → 3: microtask → 1: timer → 2: immediate",
       },
       {
         id: "nd2",
@@ -297,7 +355,8 @@ export const SEED_TOPICS = [
         question: "What is the difference between Clustering and Worker Threads, and when would you use each?",
         question_pt: "Qual é a diferença entre Clustering e Worker Threads, e quando você usaria cada um?",
         answer: "The cluster module spawns multiple child processes with isolated memory, ideal for scaling I/O-bound HTTP servers across CPU cores. Worker Threads run within the same process and can share memory via SharedArrayBuffer, making them suited for CPU-intensive tasks like image processing. A practical pattern is to combine both: one cluster process per CPU core, with worker threads inside each process for heavy computation.",
-        answer_pt: "O módulo cluster cria múltiplos processos filhos com memória isolada, ideal para escalar servidores HTTP com carga de I/O entre núcleos de CPU. Worker Threads rodam dentro do mesmo processo e podem compartilhar memória via SharedArrayBuffer, tornando-os adequados para tarefas intensivas em CPU como processamento de imagens. Um padrão prático é combinar os dois: um processo de cluster por núcleo de CPU, com worker threads dentro de cada processo para computação pesada.",
+        example: "const { Worker } = require('worker_threads');\n\nfunction runCpuTask(data) {\n  return new Promise((resolve, reject) => {\n    const worker = new Worker('./hash-worker.js', { workerData: data });\n    worker.on('message', resolve);\n    worker.on('error', reject);\n  });\n}\n// main thread stays free for I/O while worker crunches numbers",
+        example_pt: "const { Worker } = require('worker_threads');\n\nfunction runCpuTask(data) {\n  return new Promise((resolve, reject) => {\n    const worker = new Worker('./hash-worker.js', { workerData: data });\n    worker.on('message', resolve);\n    worker.on('error', reject);\n  });\n}\n// thread principal fica livre para I/O enquanto o worker processa",
       },
       {
         id: "nd3",
@@ -307,6 +366,8 @@ export const SEED_TOPICS = [
         question_pt: "Como você trata erros corretamente em uma aplicação Node.js em produção?",
         answer: "Distinguish operational errors from programmer bugs — operational errors are recoverable, bugs should trigger a controlled shutdown. In async/await code use try/catch; on event emitters always attach error handlers since an unhandled error event crashes the process. Use process.on('unhandledRejection') as a safety net and implement structured logging with pino or winston for production observability.",
         answer_pt: "Diferencie erros operacionais de bugs de programação — erros operacionais são recuperáveis, bugs devem disparar um shutdown controlado. Em código async/await use try/catch; em event emitters sempre anexe handlers de erro, pois um evento de erro não tratado trava o processo. Use process.on('unhandledRejection') como rede de segurança e implemente logging estruturado com pino ou winston para observabilidade em produção.",
+        example: "const asyncHandler = (fn) => (req, res, next) =>\n  Promise.resolve(fn(req, res, next)).catch(next);\n\napp.get('/orders/:id', asyncHandler(async (req, res) => {\n  const order = await OrderService.findById(req.params.id);\n  if (!order) throw new AppError('Order not found', 404);\n  res.json(order);\n}));\n\napp.use((err, req, res, next) => {\n  const status = err.statusCode || 500;\n  res.status(status).json({ error: err.message });\n});",
+        example_pt: "const asyncHandler = (fn) => (req, res, next) =>\n  Promise.resolve(fn(req, res, next)).catch(next);\n\napp.get('/orders/:id', asyncHandler(async (req, res) => {\n  const order = await OrderService.findById(req.params.id);\n  if (!order) throw new AppError('Pedido não encontrado', 404);\n  res.json(order);\n}));\n\napp.use((err, req, res, next) => {\n  const status = err.statusCode || 500;\n  res.status(status).json({ error: err.message });\n});",
       },
       {
         id: "nd4",
@@ -316,6 +377,8 @@ export const SEED_TOPICS = [
         question_pt: "O que é backpressure em Streams do Node.js e como você lida com isso?",
         answer: "Backpressure occurs when a readable stream produces data faster than the writable stream can consume it, causing memory to grow unbounded. writable.write() returns false when the internal buffer exceeds highWaterMark, signaling the producer to pause until the drain event fires. The easiest correct solution is stream.pipeline(), which manages backpressure automatically — failing to handle it is one of the most common causes of memory issues in streaming applications.",
         answer_pt: "Backpressure ocorre quando um readable stream produz dados mais rápido do que o writable stream consegue consumir, fazendo a memória crescer sem limite. writable.write() retorna false quando o buffer interno excede o highWaterMark, sinalizando ao produtor para pausar até que o evento drain seja disparado. A solução correta mais simples é stream.pipeline(), que gerencia o backpressure automaticamente — não lidar com isso é uma das causas mais comuns de problemas de memória em aplicações com streaming.",
+        example: "const { pipeline } = require('stream/promises');\nconst fs = require('fs');\nconst zlib = require('zlib');\n\nawait pipeline(\n  fs.createReadStream('input.log'),\n  zlib.createGzip(),\n  fs.createWriteStream('input.log.gz')\n);\n// pipeline handles backpressure and cleanup automatically",
+        example_pt: "const { pipeline } = require('stream/promises');\nconst fs = require('fs');\nconst zlib = require('zlib');\n\nawait pipeline(\n  fs.createReadStream('input.log'),\n  zlib.createGzip(),\n  fs.createWriteStream('input.log.gz')\n);\n// pipeline gerencia backpressure e cleanup automaticamente",
       },
       {
         id: "nd5",
@@ -325,6 +388,8 @@ export const SEED_TOPICS = [
         question_pt: "Qual é a diferença entre `process.nextTick()` e `setImmediate()`?",
         answer: "process.nextTick() drains completely between every event loop phase, so it executes before any pending I/O — the risk is that recursive calls can starve I/O entirely. setImmediate() runs in the Check phase, after Poll and pending I/O callbacks. Prefer setImmediate() for deferring work and reserve process.nextTick() for cases where a callback must run before any I/O in the current iteration.",
         answer_pt: "process.nextTick() é completamente esvaziado entre cada fase do event loop, portanto executa antes de qualquer I/O pendente — o risco é que chamadas recursivas podem privar completamente o I/O. setImmediate() roda na fase Check, após Poll e os callbacks de I/O pendentes. Prefira setImmediate() para adiar trabalho e reserve process.nextTick() para casos em que um callback precisa rodar antes de qualquer I/O na iteração atual.",
+        example: "const fs = require('fs');\nfs.readFile(__filename, () => {\n  process.nextTick(() => console.log('1: nextTick'));\n  setImmediate(()    => console.log('2: setImmediate'));\n  setTimeout(()      => console.log('3: setTimeout'), 0);\n});\n// Inside I/O callback, guaranteed order:\n// 1: nextTick → 2: setImmediate → 3: setTimeout",
+        example_pt: "const fs = require('fs');\nfs.readFile(__filename, () => {\n  process.nextTick(() => console.log('1: nextTick'));\n  setImmediate(()    => console.log('2: setImmediate'));\n  setTimeout(()      => console.log('3: setTimeout'), 0);\n});\n// Dentro de callback de I/O, ordem garantida:\n// 1: nextTick → 2: setImmediate → 3: setTimeout",
       },
       {
         id: "nd6",
@@ -334,6 +399,8 @@ export const SEED_TOPICS = [
         question_pt: "Quais são as principais vulnerabilidades de segurança no Node.js e como você as mitiga (OWASP)?",
         answer: "The critical risks are injection attacks, broken authentication, and insecure dependencies. Mitigate with input validation using zod or joi, parameterized queries to prevent injection, the helmet middleware for secure HTTP headers, and regular npm audit runs. Implement rate limiting, avoid eval() and dynamic require(), and follow least-privilege principles for service accounts and environment secrets.",
         answer_pt: "Os riscos críticos são ataques de injeção, autenticação quebrada e dependências inseguras. Mitigue com validação de entrada usando zod ou joi, queries parametrizadas para prevenir injeção, o middleware helmet para headers HTTP seguros e execuções regulares de npm audit. Implemente rate limiting, evite eval() e require() dinâmico, e siga os princípios de menor privilégio para contas de serviço e secrets de ambiente.",
+        example: "const helmet = require('helmet');\nconst rateLimit = require('express-rate-limit');\n\napp.use(helmet()); // secure HTTP headers (CSP, HSTS, etc.)\napp.use('/api/', rateLimit({\n  windowMs: 15 * 60 * 1000, // 15 minutes\n  max: 100,                  // 100 requests per window\n  standardHeaders: true,\n}));",
+        example_pt: "const helmet = require('helmet');\nconst rateLimit = require('express-rate-limit');\n\napp.use(helmet()); // headers HTTP seguros (CSP, HSTS, etc.)\napp.use('/api/', rateLimit({\n  windowMs: 15 * 60 * 1000, // 15 minutos\n  max: 100,                  // 100 requisições por janela\n  standardHeaders: true,\n}));",
       },
       {
         id: "nd7",
@@ -343,6 +410,8 @@ export const SEED_TOPICS = [
         question_pt: "Como o padrão de middleware do Express.js funciona e o que acontece se você não chamar `next()`?",
         answer: "Middleware forms a sequential pipeline where each function receives req, res, and next. If next() is never called and no response is sent, the request hangs and the client times out. Error-handling middleware uses the special four-argument signature (err, req, res, next) and is invoked via next(err). Middleware ordering is critical — auth and security middleware must run before route handlers, error handlers must come last.",
         answer_pt: "O middleware forma um pipeline sequencial onde cada função recebe req, res e next. Se next() nunca for chamado e nenhuma resposta for enviada, a requisição trava e o cliente tem timeout. O middleware de tratamento de erros usa a assinatura especial de quatro argumentos (err, req, res, next) e é invocado via next(err). A ordem dos middlewares é crítica — middlewares de autenticação e segurança devem rodar antes dos route handlers, e os handlers de erro devem vir por último.",
+        example: "// Request flows through each middleware in order:\napp.use(cors());              // 1. CORS headers\napp.use(helmet());            // 2. Security headers\napp.use(express.json());      // 3. Parse JSON body\napp.use(authMiddleware);      // 4. Verify JWT token\napp.use('/api', apiRouter);   // 5. Route handlers\napp.use(errorHandler);        // 6. Error handler (must be last)",
+        example_pt: "// A requisição flui por cada middleware em ordem:\napp.use(cors());              // 1. Headers CORS\napp.use(helmet());            // 2. Headers de segurança\napp.use(express.json());      // 3. Parsear body JSON\napp.use(authMiddleware);      // 4. Verificar token JWT\napp.use('/api', apiRouter);   // 5. Route handlers\napp.use(errorHandler);        // 6. Handler de erro (deve ser o último)",
       },
       {
         id: "nd8",
@@ -352,6 +421,8 @@ export const SEED_TOPICS = [
         question_pt: "Como você detecta e previne memory leaks no Node.js?",
         answer: "Memory leaks most commonly come from forgotten event listeners, uncleaned timers, and closures retaining large objects. Detect them by taking heap snapshots in Chrome DevTools via --inspect or using clinic.js to visualize memory growth over time. Prevent them by using WeakMap for temporary caches, always calling removeListener() when done, and using bounded LRU caches instead of unbounded objects.",
         answer_pt: "Memory leaks mais comumente vêm de event listeners esquecidos, timers não limpos e closures retendo objetos grandes. Detecte-os tirando heap snapshots no Chrome DevTools via --inspect ou usando clinic.js para visualizar o crescimento de memória ao longo do tempo. Previna-os usando WeakMap para caches temporários, sempre chamando removeListener() quando terminar e usando caches LRU com limite em vez de objetos ilimitados.",
+        example: "// Take heap snapshots to compare memory over time\n// 1. Start app: node --inspect server.js\n// 2. Open chrome://inspect → take Heap Snapshot #1\n// 3. Run load test for 5 minutes\n// 4. Take Heap Snapshot #2\n// 5. Compare: sort by \"Alloc. Size\" delta\n//    → look for growing arrays, detached DOM, uncleaned listeners",
+        example_pt: "// Tire heap snapshots para comparar memória ao longo do tempo\n// 1. Inicie o app: node --inspect server.js\n// 2. Abra chrome://inspect → tire Heap Snapshot #1\n// 3. Execute teste de carga por 5 minutos\n// 4. Tire Heap Snapshot #2\n// 5. Compare: ordene por delta de \"Alloc. Size\"\n//    → procure arrays crescentes, DOM desanexado, listeners não limpos",
       },
       {
         id: "nd9",
@@ -361,6 +432,8 @@ export const SEED_TOPICS = [
         question_pt: "Como você implementa graceful shutdown e gerenciamento de processos no Node.js?",
         answer: "Listen for SIGTERM, call server.close() to stop accepting connections, let in-flight requests complete, then close database pools and resources in order. When using PM2, configure kill_timeout and use pm2 reload instead of pm2 restart for zero-downtime deployments. Signal readiness with process.send('ready') when using PM2's wait_ready option so traffic isn't routed before full initialization.",
         answer_pt: "Escute o SIGTERM, chame server.close() para parar de aceitar conexões, deixe as requisições em andamento concluírem e então feche os pools de banco de dados e recursos em ordem. Ao usar PM2, configure kill_timeout e use pm2 reload em vez de pm2 restart para deploys sem downtime. Sinalize a prontidão com process.send('ready') ao usar a opção wait_ready do PM2 para que o tráfego não seja roteado antes da inicialização completa.",
+        example: "let isShuttingDown = false;\n\nprocess.on('SIGTERM', async () => {\n  isShuttingDown = true;\n  server.close(async () => {\n    await mongoose.connection.close();\n    await redis.quit();\n    process.exit(0);\n  });\n  setTimeout(() => process.exit(1), 30_000);\n});\n\napp.use((req, res, next) => {\n  if (isShuttingDown) return res.status(503).send('Shutting down');\n  next();\n});",
+        example_pt: "let isShuttingDown = false;\n\nprocess.on('SIGTERM', async () => {\n  isShuttingDown = true;\n  server.close(async () => {\n    await mongoose.connection.close();\n    await redis.quit();\n    process.exit(0);\n  });\n  setTimeout(() => process.exit(1), 30_000);\n});\n\napp.use((req, res, next) => {\n  if (isShuttingDown) return res.status(503).send('Encerrando');\n  next();\n});",
       },
       {
         id: "nd10",
@@ -370,6 +443,8 @@ export const SEED_TOPICS = [
         question_pt: "Qual é o papel do `libuv` no Node.js e como o thread pool funciona?",
         answer: "libuv is the C library that provides Node.js with async I/O by abstracting OS-specific APIs like epoll on Linux and IOCP on Windows. It manages a default thread pool of 4 threads (configurable via UV_THREADPOOL_SIZE) for operations that can't be done async at the OS level — like file system calls, dns.lookup(), and some crypto operations. If all threads are busy, thread-pool-dependent operations queue up, which is why cpu-bound crypto can block I/O.",
         answer_pt: "libuv é a biblioteca C que fornece ao Node.js I/O assíncrono abstraindo APIs específicas do SO como epoll no Linux e IOCP no Windows. Ela gerencia um thread pool padrão de 4 threads (configurável via UV_THREADPOOL_SIZE) para operações que não podem ser feitas de forma assíncrona no nível do SO — como chamadas ao sistema de arquivos, dns.lookup() e algumas operações de crypto. Se todas as threads estiverem ocupadas, operações dependentes do thread pool ficam em fila, por isso crypto com uso intensivo de CPU pode bloquear o I/O.",
+        example: "// Increase thread pool for apps with heavy file I/O or crypto\n// Set BEFORE any require/import — must be first line\nprocess.env.UV_THREADPOOL_SIZE = '16'; // default is 4, max 1024\n\n// Or set via environment variable:\n// UV_THREADPOOL_SIZE=16 node server.js",
+        example_pt: "// Aumente o thread pool para apps com muito I/O de arquivo ou crypto\n// Defina ANTES de qualquer require/import — deve ser a primeira linha\nprocess.env.UV_THREADPOOL_SIZE = '16'; // padrão é 4, máximo 1024\n\n// Ou defina via variável de ambiente:\n// UV_THREADPOOL_SIZE=16 node server.js",
       },
     ],
   },
@@ -387,6 +462,8 @@ export const SEED_TOPICS = [
         question_pt: "Two Sum: encontre pares em um array cuja soma resulte em um valor alvo.",
         answer: "Use a hash map to store complements as you iterate: for each element, check if the complement (target minus current) already exists in the map. If it does, you found the pair; if not, store the current element. This gives O(n) time and O(n) space, trading memory for a single-pass solution instead of a brute-force O(n²) nested loop.",
         answer_pt: "Use uma hash map para armazenar complementos enquanto itera: para cada elemento, verifique se o complemento (alvo menos o atual) já existe no mapa. Se existir, você encontrou o par; se não, armazene o elemento atual. Isso resulta em O(n) de tempo e O(n) de espaço, trocando memória por uma solução de passagem única em vez de um loop aninhado de força bruta O(n²).",
+        example: "function twoSum(nums, target) {\n  const map = new Map();\n  for (let i = 0; i < nums.length; i++) {\n    const complement = target - nums[i];\n    if (map.has(complement)) return [map.get(complement), i];\n    map.set(nums[i], i);\n  }\n}",
+        example_pt: "function twoSum(nums, target) {\n  const map = new Map();\n  for (let i = 0; i < nums.length; i++) {\n    const complement = target - nums[i];\n    if (map.has(complement)) return [map.get(complement), i];\n    map.set(nums[i], i); // armazena valor → índice\n  }\n}",
       },
       {
         id: "ds2",
@@ -396,6 +473,8 @@ export const SEED_TOPICS = [
         question_pt: "Como você inverte uma linked list simplesmente encadeada? Explique as abordagens iterativa e recursiva.",
         answer: "The iterative approach uses three pointers — prev, current, and next — walking the list once and redirecting each node's pointer to its predecessor. This runs in O(n) time and O(1) space. The recursive approach reverses from the tail back, but uses O(n) call stack space, making the iterative version preferable in memory-constrained environments.",
         answer_pt: "A abordagem iterativa usa três ponteiros — prev, current e next — percorrendo a lista uma vez e redirecionando o ponteiro de cada nó para seu predecessor. Isso roda em O(n) de tempo e O(1) de espaço. A abordagem recursiva inverte a partir da cauda, mas usa O(n) de espaço na call stack, tornando a versão iterativa preferível em ambientes com memória limitada.",
+        example: "function reverseList(head) {\n  let prev = null, curr = head;\n  while (curr) {\n    const next = curr.next; // save next\n    curr.next = prev;       // reverse pointer\n    prev = curr;            // advance prev\n    curr = next;            // advance curr\n  }\n  return prev; // new head\n}",
+        example_pt: "function reverseList(head) {\n  let prev = null, curr = head;\n  while (curr) {\n    const next = curr.next; // salva próximo\n    curr.next = prev;       // inverte ponteiro\n    prev = curr;            // avança prev\n    curr = next;            // avança curr\n  }\n  return prev; // nova cabeça\n}",
       },
       {
         id: "ds3",
@@ -405,6 +484,8 @@ export const SEED_TOPICS = [
         question_pt: "Como você valida uma Árvore de Busca Binária (BST)?",
         answer: "Pass min and max bounds down recursively — each node must fall strictly within its allowed range, not just be greater or less than its immediate parent. This is the key insight: a common mistake is only comparing a node to its direct children instead of enforcing the constraint across the entire subtree. The algorithm runs in O(n) time visiting every node once.",
         answer_pt: "Passe limites mínimos e máximos recursivamente — cada nó deve estar estritamente dentro do seu intervalo permitido, não apenas ser maior ou menor que seu pai imediato. Este é o insight principal: um erro comum é comparar um nó apenas com seus filhos diretos em vez de impor a restrição em toda a subárvore. O algoritmo roda em O(n) visitando cada nó uma vez.",
+        example: "function isValidBST(node, min = -Infinity, max = Infinity) {\n  if (!node) return true;\n  if (node.val <= min || node.val >= max) return false;\n  return isValidBST(node.left, min, node.val)\n      && isValidBST(node.right, node.val, max);\n}",
+        example_pt: "function isValidBST(node, min = -Infinity, max = Infinity) {\n  if (!node) return true;\n  if (node.val <= min || node.val >= max) return false;\n  return isValidBST(node.left, min, node.val)   // esquerda: max = pai\n      && isValidBST(node.right, node.val, max);  // direita: min = pai\n}",
       },
       {
         id: "ds4",
@@ -414,6 +495,8 @@ export const SEED_TOPICS = [
         question_pt: "Number of Islands: como você conta componentes conectados em uma grade 2D usando BFS/DFS?",
         answer: "Iterate through every cell, and whenever you find an unvisited land cell ('1'), trigger a BFS or DFS to mark all connected land as visited, then increment the island count. The key is marking cells visited as you go to avoid counting them twice. This runs in O(m*n) time since every cell is visited at most once.",
         answer_pt: "Itere por cada célula e sempre que encontrar uma célula de terra não visitada ('1'), dispare um BFS ou DFS para marcar toda a terra conectada como visitada, depois incremente a contagem de ilhas. O ponto-chave é marcar as células como visitadas conforme avança para evitar contá-las duas vezes. Isso roda em O(m*n) de tempo, pois cada célula é visitada no máximo uma vez.",
+        example: "function numIslands(grid) {\n  let count = 0;\n  for (let r = 0; r < grid.length; r++)\n    for (let c = 0; c < grid[0].length; c++)\n      if (grid[r][c] === '1') { dfs(grid, r, c); count++; }\n  return count;\n}\nfunction dfs(grid, r, c) {\n  if (r < 0 || c < 0 || r >= grid.length || c >= grid[0].length || grid[r][c] !== '1') return;\n  grid[r][c] = '0'; // mark visited\n  dfs(grid, r+1, c); dfs(grid, r-1, c); dfs(grid, r, c+1); dfs(grid, r, c-1);\n}",
+        example_pt: "function numIslands(grid) {\n  let count = 0;\n  for (let r = 0; r < grid.length; r++)\n    for (let c = 0; c < grid[0].length; c++)\n      if (grid[r][c] === '1') { dfs(grid, r, c); count++; }\n  return count;\n}\nfunction dfs(grid, r, c) {\n  if (r < 0 || c < 0 || r >= grid.length || c >= grid[0].length || grid[r][c] !== '1') return;\n  grid[r][c] = '0'; // marca como visitado\n  dfs(grid, r+1, c); dfs(grid, r-1, c); dfs(grid, r, c+1); dfs(grid, r, c-1);\n}",
       },
       {
         id: "ds5",
@@ -423,6 +506,8 @@ export const SEED_TOPICS = [
         question_pt: "Explique a Complexidade Big O e compare operações entre estruturas de dados.",
         answer: "Big O describes the upper bound of time or space growth as input size increases. Arrays give O(1) random access but O(n) insert/delete; hash tables give O(1) average for search, insert, and delete; balanced BSTs give O(log n) for all operations. Knowing these trade-offs is what drives data structure selection — for example, choosing a hash table for a lookup cache versus a heap for a priority queue.",
         answer_pt: "Big O descreve o limite superior do crescimento de tempo ou espaço conforme o tamanho da entrada aumenta. Arrays oferecem acesso aleatório em O(1) mas inserção/remoção em O(n); hash tables oferecem O(1) médio para busca, inserção e remoção; BSTs balanceadas oferecem O(log n) para todas as operações. Conhecer essas trocas é o que guia a seleção de estruturas de dados — por exemplo, escolher uma hash table para um cache de lookup versus um heap para uma fila de prioridade.",
+        example: "Structure     | Search | Insert | Delete\n--------------+--------+--------+--------\nArray         | O(n)   | O(n)   | O(n)\nHash Table    | O(1)*  | O(1)*  | O(1)*\nBalanced BST  | O(lg n)| O(lg n)| O(lg n)\nMin/Max Heap  | O(n)   | O(lg n)| O(lg n)\n* = average case",
+        example_pt: "Estrutura     | Busca  | Inserção | Remoção\n--------------+--------+----------+--------\nArray         | O(n)   | O(n)     | O(n)\nHash Table    | O(1)*  | O(1)*    | O(1)*\nBST Balanceada| O(lg n)| O(lg n)  | O(lg n)\nMin/Max Heap  | O(n)   | O(lg n)  | O(lg n)\n* = caso médio",
       },
       {
         id: "ds6",
@@ -432,6 +517,8 @@ export const SEED_TOPICS = [
         question_pt: "Implemente uma Stack usando Queues (ou Queue usando Stacks). Quais são as trocas envolvidas?",
         answer: "Implementing a stack with two queues makes either push or pop O(n) — you transfer all elements between queues to maintain LIFO order. Similarly, a queue with two stacks amortizes the cost: enqueue to one stack, and when dequeuing, transfer everything to the second stack only when it's empty. These are classic problems testing your understanding of how LIFO and FIFO ordering can be emulated.",
         answer_pt: "Implementar uma stack com duas queues torna push ou pop O(n) — você transfere todos os elementos entre as queues para manter a ordem LIFO. Da mesma forma, uma queue com duas stacks amortiza o custo: enqueue em uma stack e, ao fazer dequeue, transfira tudo para a segunda stack apenas quando ela estiver vazia. Esses são problemas clássicos que testam sua compreensão de como a ordenação LIFO e FIFO pode ser emulada.",
+        example: "class StackWithQueues {\n  constructor() { this.q1 = []; this.q2 = []; }\n  push(val) {\n    this.q2.push(val);                         // push to empty q2\n    while (this.q1.length) this.q2.push(this.q1.shift()); // move all q1 → q2\n    [this.q1, this.q2] = [this.q2, this.q1];  // swap queues\n  }\n  pop() { return this.q1.shift(); }            // O(1) pop\n}",
+        example_pt: "class StackWithQueues {\n  constructor() { this.q1 = []; this.q2 = []; }\n  push(val) {\n    this.q2.push(val);                         // push na q2 vazia\n    while (this.q1.length) this.q2.push(this.q1.shift()); // move q1 → q2\n    [this.q1, this.q2] = [this.q2, this.q1];  // troca as queues\n  }\n  pop() { return this.q1.shift(); }            // pop O(1)\n}",
       },
       {
         id: "ds7",
@@ -441,6 +528,8 @@ export const SEED_TOPICS = [
         question_pt: "Como você detecta um ciclo em uma Linked List? (Algoritmo de Floyd)",
         answer: "Floyd's Tortoise and Hare algorithm uses two pointers: slow advances one node per step, fast advances two. If a cycle exists, they will eventually meet inside it; if fast reaches null, there's no cycle. This runs in O(n) time and O(1) space — no hash set needed — making it the optimal approach for cycle detection.",
         answer_pt: "O algoritmo da Tartaruga e da Lebre de Floyd usa dois ponteiros: slow avança um nó por passo, fast avança dois. Se um ciclo existir, eles eventualmente se encontrarão dentro dele; se fast atingir null, não há ciclo. Isso roda em O(n) de tempo e O(1) de espaço — sem necessidade de hash set — tornando-o a abordagem ótima para detecção de ciclos.",
+        example: "function hasCycle(head) {\n  let slow = head, fast = head;\n  while (fast && fast.next) {\n    slow = slow.next;        // 1 step\n    fast = fast.next.next;   // 2 steps\n    if (slow === fast) return true; // they met → cycle!\n  }\n  return false; // fast reached null → no cycle\n}",
+        example_pt: "function hasCycle(head) {\n  let slow = head, fast = head;\n  while (fast && fast.next) {\n    slow = slow.next;        // 1 passo\n    fast = fast.next.next;   // 2 passos\n    if (slow === fast) return true; // se encontraram → ciclo!\n  }\n  return false; // fast chegou a null → sem ciclo\n}",
       },
       {
         id: "ds8",
@@ -450,6 +539,8 @@ export const SEED_TOPICS = [
         question_pt: "Como você encontra o K-ésimo maior elemento em um array usando um Min-Heap?",
         answer: "Maintain a min-heap of exactly K elements. As you iterate through the array, if the current element is larger than the heap's minimum root, replace it and heapify. After processing all elements, the root is the Kth largest. This runs in O(n log k) time — far better than sorting the full array at O(n log n) when K is small.",
         answer_pt: "Mantenha um min-heap com exatamente K elementos. Enquanto itera pelo array, se o elemento atual for maior que a raiz mínima do heap, substitua-a e faça o heapify. Após processar todos os elementos, a raiz é o K-ésimo maior. Isso roda em O(n log k) de tempo — muito melhor do que ordenar o array completo em O(n log n) quando K é pequeno.",
+        example: "function kthLargest(nums, k) {\n  const minHeap = new MinPriorityQueue();\n  for (const n of nums) {\n    minHeap.enqueue(n);\n    if (minHeap.size() > k) minHeap.dequeue(); // evict smallest\n  }\n  return minHeap.front().element; // root = Kth largest\n}\n// nums=[3,1,5,12,2,11], k=3 → heap keeps [5,11,12] → returns 5",
+        example_pt: "function kthLargest(nums, k) {\n  const minHeap = new MinPriorityQueue();\n  for (const n of nums) {\n    minHeap.enqueue(n);\n    if (minHeap.size() > k) minHeap.dequeue(); // remove o menor\n  }\n  return minHeap.front().element; // raiz = K-ésimo maior\n}\n// nums=[3,1,5,12,2,11], k=3 → heap mantém [5,11,12] → retorna 5",
       },
       {
         id: "ds9",
@@ -459,6 +550,8 @@ export const SEED_TOPICS = [
         question_pt: "Course Schedule: como você detecta se todos os cursos podem ser concluídos (ordenação topológica)?",
         answer: "Model courses as a directed graph and use Kahn's algorithm: repeatedly remove nodes with zero in-degree, decrementing neighbors' counts. If all nodes are removed, a valid topological order exists; if nodes remain, there's a cycle and not all courses can be completed. This runs in O(V+E) time.",
         answer_pt: "Modele os cursos como um grafo dirigido e use o algoritmo de Kahn: remova repetidamente nós com in-degree zero, decrementando as contagens dos vizinhos. Se todos os nós forem removidos, existe uma ordenação topológica válida; se restarem nós, há um ciclo e nem todos os cursos podem ser concluídos. Isso roda em O(V+E) de tempo.",
+        example: "function canFinish(numCourses, prerequisites) {\n  const inDeg = Array(numCourses).fill(0);\n  const graph = Array.from({ length: numCourses }, () => []);\n  for (const [a, b] of prerequisites) { graph[b].push(a); inDeg[a]++; }\n  const queue = inDeg.reduce((q, d, i) => (d === 0 && q.push(i), q), []);\n  let count = 0;\n  while (queue.length) {\n    const node = queue.shift(); count++;\n    for (const nb of graph[node]) if (--inDeg[nb] === 0) queue.push(nb);\n  }\n  return count === numCourses;\n}",
+        example_pt: "function canFinish(numCourses, prerequisites) {\n  const inDeg = Array(numCourses).fill(0);\n  const graph = Array.from({ length: numCourses }, () => []);\n  for (const [a, b] of prerequisites) { graph[b].push(a); inDeg[a]++; }\n  const queue = inDeg.reduce((q, d, i) => (d === 0 && q.push(i), q), []);\n  let count = 0;\n  while (queue.length) {\n    const node = queue.shift(); count++;\n    for (const nb of graph[node]) if (--inDeg[nb] === 0) queue.push(nb);\n  }\n  return count === numCourses; // true = sem ciclo, todos completáveis\n}",
       },
       {
         id: "ds10",
@@ -468,6 +561,8 @@ export const SEED_TOPICS = [
         question_pt: "Como você implementa um sistema de Autocomplete usando uma Trie?",
         answer: "A Trie stores words character by character, so finding all words with a given prefix means traversing to the prefix node, then doing a DFS to collect everything below it. Insertion and prefix search both run in O(m) time where m is the word length. At scale, you pre-compute the top-K suggestions at each node so autocomplete queries don't require a full DFS on every keystroke.",
         answer_pt: "Uma Trie armazena palavras caractere por caractere, então encontrar todas as palavras com um dado prefixo significa percorrer até o nó do prefixo e depois fazer um DFS para coletar tudo abaixo dele. Inserção e busca por prefixo rodam em O(m) de tempo, onde m é o comprimento da palavra. Em escala, você pré-computa as top-K sugestões em cada nó para que as queries de autocomplete não exijam um DFS completo a cada tecla pressionada.",
+        example: "class TrieNode { constructor() { this.children = {}; this.isEnd = false; } }\n\nclass Trie {\n  constructor() { this.root = new TrieNode(); }\n  insert(word) {\n    let node = this.root;\n    for (const ch of word) { if (!node.children[ch]) node.children[ch] = new TrieNode(); node = node.children[ch]; }\n    node.isEnd = true;\n  }\n  search(prefix) {\n    let node = this.root;\n    for (const ch of prefix) { if (!node.children[ch]) return []; node = node.children[ch]; }\n    return this._dfs(node, prefix);\n  }\n  _dfs(node, prefix, results = []) {\n    if (node.isEnd) results.push(prefix);\n    for (const [ch, child] of Object.entries(node.children)) this._dfs(child, prefix + ch, results);\n    return results;\n  }\n}",
+        example_pt: "class TrieNode { constructor() { this.children = {}; this.isEnd = false; } }\n\nclass Trie {\n  constructor() { this.root = new TrieNode(); }\n  insert(word) {\n    let node = this.root;\n    for (const ch of word) { if (!node.children[ch]) node.children[ch] = new TrieNode(); node = node.children[ch]; }\n    node.isEnd = true;\n  }\n  search(prefix) { // busca todas as palavras com o prefixo\n    let node = this.root;\n    for (const ch of prefix) { if (!node.children[ch]) return []; node = node.children[ch]; }\n    return this._dfs(node, prefix);\n  }\n  _dfs(node, prefix, results = []) {\n    if (node.isEnd) results.push(prefix);\n    for (const [ch, child] of Object.entries(node.children)) this._dfs(child, prefix + ch, results);\n    return results;\n  }\n}",
       },
     ],
   },
@@ -485,6 +580,8 @@ export const SEED_TOPICS = [
         question_pt: "Projete um encurtador de URL (ex: TinyURL, bit.ly)",
         answer: "Generate a unique short key using Base62 encoding or a hash with collision resolution, store the mapping in a key-value database, and redirect via HTTP 301 or 302. Use Redis to cache hot URLs for sub-50ms lookups since the read-to-write ratio is roughly 100:1. The main design decisions are choosing between pre-generated keys versus on-demand hashing, and whether 301 (permanent, browser-cached) or 302 (temporary, trackable) redirects better fit the use case.",
         answer_pt: "Gere uma chave curta única usando codificação Base62 ou um hash com resolução de colisão, armazene o mapeamento em um banco de dados chave-valor e redirecione via HTTP 301 ou 302. Use Redis para fazer cache das URLs mais acessadas para lookups abaixo de 50ms, já que a razão leitura/escrita é de aproximadamente 100:1. As principais decisões de design são escolher entre chaves pré-geradas versus hashing sob demanda, e se redirecionamentos 301 (permanente, com cache no navegador) ou 302 (temporário, rastreável) se encaixam melhor no caso de uso.",
+        example: "Like a coat check — you hand over your item (long URL), get a ticket number (short code), and return the ticket to get your item back. The attendant keeps a simple lookup table: ticket number → item.",
+        example_pt: "Como um guarda-volumes — você entrega seu item (URL longa), recebe um número de ticket (código curto) e devolve o ticket para recuperar seu item. O atendente mantém uma tabela de lookup simples: número do ticket → item.",
       },
       {
         id: "sd2",
@@ -494,6 +591,8 @@ export const SEED_TOPICS = [
         question_pt: "Projete um sistema de Chat/Mensagens (ex: WhatsApp, Messenger)",
         answer: "Maintain persistent WebSocket connections for real-time delivery. The chat service checks a presence service (backed by Redis) to determine if the recipient is online — if so, deliver via WebSocket; if offline, queue the message and send a push notification. Store message history in Cassandra or HBase for its high write throughput and time-series access patterns.",
         answer_pt: "Mantenha conexões WebSocket persistentes para entrega em tempo real. O serviço de chat verifica um serviço de presença (baseado em Redis) para determinar se o destinatário está online — se estiver, entregue via WebSocket; se estiver offline, enfileire a mensagem e envie uma notificação push. Armazene o histórico de mensagens no Cassandra ou HBase por seu alto throughput de escrita e padrões de acesso em séries temporais.",
+        example: "Like a post office — if the recipient is home, the mail carrier delivers directly to their hands (WebSocket). If they're not home, the letter is left in the mailbox (message queue) and a notification slip is posted (push notification).",
+        example_pt: "Como um correio — se o destinatário está em casa, o carteiro entrega diretamente em mãos (WebSocket). Se não está em casa, a carta fica na caixa de correio (fila de mensagens) e um aviso de notificação é deixado (push notification).",
       },
       {
         id: "sd3",
@@ -503,6 +602,8 @@ export const SEED_TOPICS = [
         question_pt: "Projete um Rate Limiter",
         answer: "Cap API calls per client within a time window and return HTTP 429 when exceeded. The token bucket algorithm is the most practical: it allows controlled bursts while enforcing an average rate. Store counters in Redis for sub-millisecond atomic increments using INCR with TTL. Implement at the API gateway layer so every downstream service gets protection without duplicating logic.",
         answer_pt: "Limite as chamadas de API por cliente dentro de uma janela de tempo e retorne HTTP 429 quando excedido. O algoritmo de token bucket é o mais prático: permite bursts controlados enquanto impõe uma taxa média. Armazene contadores no Redis para incrementos atômicos abaixo de milissegundo usando INCR com TTL. Implemente na camada de API gateway para que cada serviço downstream receba proteção sem duplicar lógica.",
+        example: "Token bucket analogy — imagine a bucket that holds 10 tokens, with 1 token added per second. Each API request costs 1 token. If the bucket is empty, the request is rejected (HTTP 429). This allows short bursts of up to 10 requests while enforcing a steady average of 1 req/sec.",
+        example_pt: "Analogia do token bucket — imagine um balde com 10 tokens, com 1 token adicionado por segundo. Cada requisição API custa 1 token. Se o balde está vazio, a requisição é rejeitada (HTTP 429). Isso permite bursts curtos de até 10 requisições enquanto mantém uma média estável de 1 req/seg.",
       },
       {
         id: "sd4",
@@ -512,6 +613,8 @@ export const SEED_TOPICS = [
         question_pt: "Projete um Feed de Notícias de Rede Social (ex: Facebook, Twitter)",
         answer: "Fan-out-on-write pre-computes each user's feed on post, enabling fast reads but expensive writes for users with millions of followers. The optimal approach is a hybrid: push to regular users' feed caches on write, but pull celebrity posts at read time to avoid fan-out storms. A ranking service then applies relevance scoring before serving the final feed.",
         answer_pt: "Fan-out-on-write pré-computa o feed de cada usuário na postagem, permitindo leituras rápidas mas escritas custosas para usuários com milhões de seguidores. A abordagem ótima é híbrida: enviar para os caches de feed de usuários comuns na escrita, mas buscar posts de celebridades no momento da leitura para evitar fan-out storms. Um serviço de ranking aplica então uma pontuação de relevância antes de servir o feed final.",
+        example: "Like a newspaper — some articles are pre-printed and delivered to every subscriber's doorstep (fan-out-on-write for regular users), while celebrity columns are assembled on demand at the newsstand when you ask for them (fan-out-on-read for high-follower accounts).",
+        example_pt: "Como um jornal — alguns artigos são pré-impressos e entregues na porta de cada assinante (fan-out-on-write para usuários comuns), enquanto colunas de celebridades são montadas sob demanda na banca quando você as solicita (fan-out-on-read para contas com muitos seguidores).",
       },
       {
         id: "sd5",
@@ -521,6 +624,8 @@ export const SEED_TOPICS = [
         question_pt: "Projete um Sistema de Notificações",
         answer: "Decouple triggering from delivery: the notification service validates and enriches the request, checks user preferences, then publishes to prioritized Kafka topics. Channel workers (APNs/FCM for push, SES for email, Twilio for SMS) consume independently and handle retries. Failed deliveries go to a dead letter queue for inspection and reprocessing.",
         answer_pt: "Desacople o disparo da entrega: o serviço de notificação valida e enriquece a requisição, verifica as preferências do usuário e publica em tópicos Kafka priorizados. Workers de canal (APNs/FCM para push, SES para email, Twilio para SMS) consomem independentemente e lidam com retentativas. Entregas com falha vão para uma dead letter queue para inspeção e reprocessamento.",
+        example: "Like a mail sorting facility — incoming mail is classified by priority (urgent, normal, bulk), then routed to specialized workers: postal carriers for physical mail, email servers for digital, and couriers for express packages. Each works independently, and undeliverable items go to a dead letter office.",
+        example_pt: "Como uma central de triagem de correio — a correspondência é classificada por prioridade (urgente, normal, em massa) e encaminhada para workers especializados: carteiros para correio físico, servidores de email para digital e motoboys para entregas expressas. Cada um trabalha independentemente, e itens não entregáveis vão para uma central de devoluções.",
       },
       {
         id: "sd6",
@@ -530,6 +635,8 @@ export const SEED_TOPICS = [
         question_pt: "Projete um sistema de Sharding de Banco de Dados",
         answer: "Shard key selection is the most critical decision — a good key distributes load evenly and keeps related queries on one shard to avoid cross-shard joins. Consistent hashing with virtual nodes is the standard approach because adding or removing a shard only moves approximately 1/N of the data instead of reshuffling everything. Directory-based sharding adds flexibility at the cost of a lookup service becoming a bottleneck.",
         answer_pt: "A seleção da shard key é a decisão mais crítica — uma boa chave distribui a carga uniformemente e mantém queries relacionadas em um único shard para evitar joins entre shards. Consistent hashing com nós virtuais é a abordagem padrão porque adicionar ou remover um shard move apenas aproximadamente 1/N dos dados em vez de reorganizar tudo. O sharding baseado em diretório adiciona flexibilidade ao custo de um serviço de lookup se tornar um gargalo.",
+        example: "Consistent hashing ring — imagine servers placed on a clock face at positions 0, 120, and 240 degrees. Each data key is hashed to a position on the ring and stored at the next server clockwise. Adding a 4th server only moves keys between two neighbors, not all data.",
+        example_pt: "Anel de consistent hashing — imagine servidores posicionados em um relógio nas posições 0, 120 e 240 graus. Cada chave de dado é hasheada para uma posição no anel e armazenada no próximo servidor no sentido horário. Adicionar um 4o servidor só move chaves entre dois vizinhos, não todos os dados.",
       },
       {
         id: "sd7",
@@ -539,6 +646,8 @@ export const SEED_TOPICS = [
         question_pt: "Projete um Sistema de Armazenamento de Arquivos (ex: Google Drive, Dropbox)",
         answer: "Split files into chunks (typically ~4MB), identify each by content hash for deduplication and delta sync, and store chunks in object storage like S3. File metadata — hierarchy, permissions, versions — lives in a relational database. A sync service uses WebSockets or long polling to notify connected devices of changes in real time.",
         answer_pt: "Divida os arquivos em chunks (tipicamente ~4MB), identifique cada um por hash de conteúdo para deduplicação e delta sync, e armazene os chunks em object storage como S3. Os metadados dos arquivos — hierarquia, permissões, versões — ficam em um banco de dados relacional. Um serviço de sincronização usa WebSockets ou long polling para notificar os dispositivos conectados sobre mudanças em tempo real.",
+        example: "Like LEGO blocks — a file is broken into small, labeled chunks. Each block has a unique hash stamped on it. If two files share identical blocks, they reuse the same LEGO pieces instead of duplicating them, saving storage.",
+        example_pt: "Como blocos de LEGO — um arquivo é quebrado em pequenos chunks rotulados. Cada bloco tem um hash único estampado. Se dois arquivos compartilham blocos idênticos, eles reutilizam as mesmas peças de LEGO em vez de duplicá-las, economizando armazenamento.",
       },
       {
         id: "sd8",
@@ -548,6 +657,8 @@ export const SEED_TOPICS = [
         question_pt: "Projete um sistema de Autocomplete / Typeahead de Busca",
         answer: "The core data structure is a Trie with pre-computed top-K suggestions at each node, held in memory for microsecond lookups. At scale, partition the trie via range-based sharding across servers, and decouple reads from updates — queries hit the in-memory trie while search log aggregation pipelines rebuild and atomically swap in updated tries. Cache popular prefixes aggressively at the CDN edge.",
         answer_pt: "A estrutura de dados central é uma Trie com as top-K sugestões pré-computadas em cada nó, mantida em memória para lookups em microssegundos. Em escala, particione a trie via sharding baseado em intervalo entre servidores, e desacople leituras de atualizações — as queries acessam a trie em memória enquanto pipelines de agregação de logs de busca reconstruem e trocam atomicamente as tries atualizadas. Faça cache agressivo de prefixos populares na borda da CDN.",
+        example: "User types \"rea\" → traverse Trie: root → r → e → a\nAt node \"a\", pre-computed top-3: [\"react\", \"react native\", \"real estate\"]\nReturn suggestions in <1ms from memory — no DB query needed.\nBackground job updates Trie hourly from search log aggregation.",
+        example_pt: "Usuário digita \"rea\" → percorre Trie: root → r → e → a\nNo nó \"a\", top-3 pré-computado: [\"react\", \"react native\", \"real estate\"]\nRetorna sugestões em <1ms da memória — sem query no banco.\nJob em background atualiza a Trie a cada hora a partir dos logs de busca.",
       },
       {
         id: "sd9",
@@ -557,6 +668,8 @@ export const SEED_TOPICS = [
         question_pt: "Projete uma CDN (Content Delivery Network)",
         answer: "Geographically distributed edge servers cache content close to users, with DNS geo-routing directing each request to the nearest edge PoP. On a cache hit, the edge serves directly in under 10ms. On a miss, it fetches from a shield cache or the origin, caches the response with a TTL, and serves it. Invalidation is handled via TTL expiry, versioned URLs, or a purge API for urgent updates.",
         answer_pt: "Servidores de borda distribuídos geograficamente fazem cache de conteúdo próximo aos usuários, com DNS geo-routing direcionando cada requisição ao PoP de borda mais próximo. Em um cache hit, a borda serve diretamente em menos de 10ms. Em um cache miss, ela busca de um shield cache ou da origem, faz cache da resposta com um TTL e a serve. A invalidação é feita via expiração de TTL, URLs versionadas ou uma API de purga para atualizações urgentes.",
+        example: "Like franchise stores — instead of every customer ordering from headquarters (origin server), the same products are stocked at nearby franchise locations (edge servers). Customers get their items faster, and headquarters handles far less traffic.",
+        example_pt: "Como lojas de franquia — em vez de cada cliente fazer pedido na sede (servidor de origem), os mesmos produtos ficam estocados em filiais próximas (servidores de borda). Os clientes recebem seus itens mais rápido, e a sede lida com muito menos tráfego.",
       },
       {
         id: "sd10",
@@ -566,6 +679,8 @@ export const SEED_TOPICS = [
         question_pt: "Projete um Load Balancer",
         answer: "Load balancers operate at Layer 4 (TCP — fast, IP/port based) or Layer 7 (HTTP — smart, can route by URL path or headers). Least connections and consistent hashing are the most useful algorithms: least connections routes to the least busy server, while consistent hashing enables sticky sessions without centralized state. Health checks continuously probe backends and remove unhealthy instances from the pool automatically.",
         answer_pt: "Load balancers operam na Camada 4 (TCP — rápido, baseado em IP/porta) ou na Camada 7 (HTTP — inteligente, pode rotear por caminho de URL ou headers). Least connections e consistent hashing são os algoritmos mais úteis: least connections roteia para o servidor menos ocupado, enquanto consistent hashing habilita sticky sessions sem estado centralizado. Health checks sondam continuamente os backends e removem instâncias não saudáveis do pool automaticamente.",
+        example: "Like a restaurant host — when customers arrive, the host seats them at the least busy table (least connections algorithm). If a waiter calls in sick, the host stops seating people at their section (health check removes unhealthy instance).",
+        example_pt: "Como um recepcionista de restaurante — quando clientes chegam, o recepcionista os coloca na mesa menos ocupada (algoritmo least connections). Se um garçom avisa que está doente, o recepcionista para de colocar pessoas na sua seção (health check remove instância não saudável).",
       },
     ],
   },
@@ -583,6 +698,8 @@ export const SEED_TOPICS = [
         question_pt: "Você menciona ter construído sistemas RAG com pgVector e Qdrant. Me explique o pipeline completo — desde a ingestão de documentos até a recuperação semântica. Qual estratégia de chunking você usou e por quê?",
         answer: "At Lex Consultoria, I built a RAG pipeline on top of TOTVS ERP data: documents are chunked using a sliding window with 50-token overlap to preserve context across boundaries, embedded with OpenAI's text-embedding-ada-002, and stored in pgVector — I chose pgVector because the HR data already lived in PostgreSQL, avoiding an extra infrastructure dependency. At query time, the user's question is embedded and a cosine similarity search retrieves the top-k chunks, which are injected into the GPT-4 prompt as grounded context. At TateAI I used Qdrant instead because we needed faster similarity search at scale with metadata filtering.",
         answer_pt: "Na Lex Consultoria, construí um pipeline RAG sobre dados do ERP TOTVS: os documentos são divididos em chunks com uma janela deslizante e sobreposição de 50 tokens para preservar o contexto entre fronteiras, embutidos com o text-embedding-ada-002 da OpenAI e armazenados no pgVector — escolhi pgVector porque os dados de RH já estavam no PostgreSQL, evitando uma dependência extra de infraestrutura. No momento da query, a pergunta do usuário é embutida e uma busca por similaridade de cosseno recupera os top-k chunks, que são injetados no prompt do GPT-4 como contexto fundamentado. Na TateAI usei Qdrant porque precisávamos de busca por similaridade mais rápida em escala com filtragem por metadados.",
+        example: "In the interview I'd walk through: 'Document comes in → chunked at 512 tokens → embedded → stored in pgVector → user asks question → embedded → cosine similarity → top-5 chunks injected into GPT-4 prompt.'",
+        example_pt: "Na entrevista eu explicaria: 'Documento entra → dividido em chunks de 512 tokens → embedded → armazenado no pgVector → usuário faz pergunta → embedded → similaridade de cosseno → top-5 chunks injetados no prompt do GPT-4.'",
       },
       {
         id: "cv2",
@@ -592,6 +709,8 @@ export const SEED_TOPICS = [
         question_pt: "No BTG Pactual você processou mais de $10M em transações diárias. Como você arquitetou o sistema para confiabilidade nessa escala? O que acontece quando um serviço downstream falha?",
         answer: "The system was built on AWS Lambda, DynamoDB, and Kafka — each transaction publishes to a Kafka topic and downstream consumers process independently, so a failure in one consumer doesn't block others. For financial reliability, we used idempotency keys to prevent duplicate transactions on retries and DLQs for failed events. Circuit breakers prevented cascading failures and we achieved 99.9% uptime at 200ms average latency.",
         answer_pt: "O sistema foi construído sobre AWS Lambda, DynamoDB e Kafka — cada transação publica em um tópico Kafka e os consumidores downstream processam de forma independente, portanto uma falha em um consumidor não bloqueia os outros. Para confiabilidade financeira, usamos idempotency keys para evitar transações duplicadas em retentativas e DLQs para eventos com falha. Circuit breakers evitaram falhas em cascata e alcançamos 99,9% de uptime com 200ms de latência média.",
+        example: "I'd draw on the whiteboard: API Gateway → Lambda → Kafka topic → [Settlement, Reporting, Compliance] consumers, with DLQ for failures. Each consumer is independent — if Reporting goes down, Settlement and Compliance keep processing.",
+        example_pt: "Eu desenharia no quadro: API Gateway → Lambda → tópico Kafka → consumers [Liquidação, Relatórios, Compliance], com DLQ para falhas. Cada consumer é independente — se Relatórios cai, Liquidação e Compliance continuam processando.",
       },
       {
         id: "cv3",
@@ -601,6 +720,8 @@ export const SEED_TOPICS = [
         question_pt: "Você gerenciou mais de 1000 conexões WebSocket simultâneas para streaming de chat na TateAI. Como você gerenciou o ciclo de vida das conexões, o backpressure e o escalonamento?",
         answer: "A connection registry tracked user sessions, handled heartbeats, and cleaned up on disconnect. For LLM streaming backpressure, I forwarded tokens to the client as they arrived from the LLM API, and paused the upstream read when the client's buffer was full. Scaling used multiple Node.js instances behind a load balancer with sticky sessions and Redis pub/sub to broadcast messages across instances.",
         answer_pt: "Um connection registry rastreava as sessões dos usuários, gerenciava heartbeats e fazia a limpeza na desconexão. Para o backpressure do streaming de LLM, encaminhava os tokens ao cliente conforme chegavam da API do LLM e pausava a leitura upstream quando o buffer do cliente estava cheio. O escalonamento usava múltiplas instâncias Node.js por trás de um load balancer com sticky sessions e Redis pub/sub para transmitir mensagens entre as instâncias.",
+        example: "I'd explain: 'Think of it like a radio station — the server broadcasts tokens as they arrive from the LLM, and if a listener's buffer is full, we pause the broadcast until they catch up. This prevents memory from growing unbounded.'",
+        example_pt: "Eu explicaria: 'Pense como uma estação de rádio — o servidor transmite tokens conforme chegam do LLM, e se o buffer de um ouvinte está cheio, pausamos a transmissão até ele se atualizar. Isso evita que a memória cresça sem limite.'",
       },
       {
         id: "cv4",
@@ -610,6 +731,8 @@ export const SEED_TOPICS = [
         question_pt: "Você liderou a migração de serviços Java para Node.js no BTG Pactual, reduzindo custos em 35%. Como você conduziu essa migração sem downtime?",
         answer: "I used the strangler fig pattern — building the Node.js replacement alongside the Java service, then using API Gateway weighted routing to shift traffic gradually: 10%, 25%, 50%, 100% while monitoring error rates and latency. Cost savings came from Lambda's pay-per-invocation model versus always-on ECS containers, and response times improved 45% because Node.js handles I/O-bound workloads more efficiently.",
         answer_pt: "Usei o padrão strangler fig — construindo o substituto em Node.js paralelamente ao serviço Java e usando o roteamento ponderado do API Gateway para transferir tráfego gradualmente: 10%, 25%, 50%, 100% monitorando as taxas de erro e latência. A economia de custos veio do modelo pay-per-invocation do Lambda versus containers ECS sempre ativos, e os tempos de resposta melhoraram 45% porque o Node.js lida com cargas de trabalho de I/O de forma mais eficiente.",
+        example: "I'd say: 'We used the strangler fig pattern — like renovating a house room by room while people still live in it. We gradually shifted traffic from Java to Node.js: 10% → 25% → 50% → 100%, rolling back immediately if error rates spiked.'",
+        example_pt: "Eu diria: 'Usamos o padrão strangler fig — como reformar uma casa cômodo por cômodo enquanto as pessoas ainda moram nela. Transferimos tráfego gradualmente de Java para Node.js: 10% → 25% → 50% → 100%, fazendo rollback imediato se as taxas de erro subissem.'",
       },
       {
         id: "cv5",
@@ -619,6 +742,8 @@ export const SEED_TOPICS = [
         question_pt: "Me fale sobre a plataforma de telemedicina na Lex Consultoria. Como você lidou com a confiabilidade das videochamadas, a segurança dos dados médicos e o atendimento de mais de 20.000 funcionários?",
         answer: "We self-hosted Jitsi for data sovereignty and implemented automatic quality adaptation with fallback to audio-only and reconnection with session persistence for reliability. Medical data follows LGPD: AES-256 encryption at rest, TLS 1.3 in transit, S3 bucket policies with access logging for audit. The React frontend uses WebSockets for real-time presence, with role-based access control covering all 20,000+ employees.",
         answer_pt: "Hospedamos o Jitsi internamente para soberania dos dados e implementamos adaptação automática de qualidade com fallback para apenas áudio e reconexão com persistência de sessão para confiabilidade. Os dados médicos seguem a LGPD: criptografia AES-256 em repouso, TLS 1.3 em trânsito, políticas de bucket S3 com logging de acesso para auditoria. O frontend em React usa WebSockets para presença em tempo real, com controle de acesso baseado em papéis cobrindo todos os mais de 20.000 funcionários.",
+        example: "I'd describe: 'Three layers of security — Jitsi self-hosted for data sovereignty, AES-256 encryption for documents, and LGPD-compliant audit logs for every access. If a doctor opens a patient file, that access is logged with timestamp, user ID, and IP.'",
+        example_pt: "Eu descreveria: 'Três camadas de segurança — Jitsi auto-hospedado para soberania de dados, criptografia AES-256 para documentos e logs de auditoria em conformidade com a LGPD para cada acesso. Se um médico abre um prontuário, esse acesso é registrado com timestamp, ID do usuário e IP.'",
       },
       {
         id: "cv6",
@@ -628,6 +753,8 @@ export const SEED_TOPICS = [
         question_pt: "Você afirma entregar features 3x mais rápido usando ferramentas de desenvolvimento assistido por IA. Você pode dar um exemplo concreto? Como você garante a qualidade do código?",
         answer: "Building a financial report module at BTG that would normally take two weeks took three days using Claude Code for architecture scaffolding, Copilot for boilerplate, and Amazon Q for AWS configurations. Quality assurance is critical — I never accept AI output blindly: I review every line for security issues, verify business logic matches requirements, and run the full test suite before any PR is opened.",
         answer_pt: "Construir um módulo de relatórios financeiros no BTG que normalmente levaria duas semanas levou três dias usando Claude Code para scaffolding da arquitetura, Copilot para boilerplate e Amazon Q para configurações AWS. A garantia de qualidade é crítica — nunca aceito o output da IA cegamente: reviso cada linha em busca de problemas de segurança, verifico se a lógica de negócio corresponde aos requisitos e executo a suíte de testes completa antes de qualquer PR ser aberto.",
+        example: "I'd give a concrete example: 'A CRM report module — schema, API, components, tests — 2 weeks manually vs 3 days with Claude Code + Copilot. But I review every line for security. AI writes the scaffolding, I own the quality.'",
+        example_pt: "Eu daria um exemplo concreto: 'Um módulo de relatórios de CRM — schema, API, componentes, testes — 2 semanas manualmente vs 3 dias com Claude Code + Copilot. Mas eu reviso cada linha por segurança. A IA escreve o scaffolding, eu garanto a qualidade.'",
       },
       {
         id: "cv7",
@@ -637,6 +764,8 @@ export const SEED_TOPICS = [
         question_pt: "Na FAVO você alcançou 60% de redução de latência. Quais otimizações específicas você fez?",
         answer: "Distributed tracing revealed two main issues: N+1 query problems in order creation, fixed with DataLoader-style batching and denormalization into DynamoDB; and Lambda cold starts on critical paths, fixed with provisioned concurrency and reduced package sizes. Non-critical external service calls moved from synchronous to SQS-backed async. Combined, these dropped P95 latency from ~2.5s to ~1s and improved conversion rate by 35%.",
         answer_pt: "O rastreamento distribuído revelou dois problemas principais: problemas de query N+1 na criação de pedidos, resolvidos com batching no estilo DataLoader e desnormalização no DynamoDB; e cold starts do Lambda em caminhos críticos, resolvidos com provisioned concurrency e tamanhos de pacote reduzidos. Chamadas a serviços externos não críticos migraram de síncronas para assíncronas com suporte de SQS. Em conjunto, essas mudanças reduziram a latência P95 de ~2,5s para ~1s e melhoraram a taxa de conversão em 35%.",
+        example: "I'd list the wins: 'N+1 queries fixed with DataLoader, Lambda cold starts fixed with provisioned concurrency, sync calls moved to SQS — P95 from 2.5s to 1s. Each fix was identified through distributed tracing, not guesswork.'",
+        example_pt: "Eu listaria as conquistas: 'Queries N+1 resolvidas com DataLoader, cold starts do Lambda resolvidos com provisioned concurrency, chamadas síncronas migradas para SQS — P95 de 2,5s para 1s. Cada correção foi identificada via rastreamento distribuído, não por suposição.'",
       },
       {
         id: "cv8",
@@ -646,6 +775,8 @@ export const SEED_TOPICS = [
         question_pt: "Como Tech Lead na Lex, como você equilibra o trabalho de código com as responsabilidades de liderança?",
         answer: "I allocate roughly 60% coding and 40% leadership — code reviews, mentoring, planning, and stakeholder communication. For architectural decisions I write lightweight ADRs, present options with trade-offs, and take ownership of the outcome. Staying close to the code keeps me honest about estimates and means I can jump in directly during critical production situations.",
         answer_pt: "Distribuo aproximadamente 60% codificando e 40% em liderança — code reviews, mentoria, planejamento e comunicação com stakeholders. Para decisões de arquitetura escrevo ADRs leves, apresento opções com suas trocas e assumo a responsabilidade pelo resultado. Manter-me próximo ao código me deixa honesto nas estimativas e significa que posso entrar diretamente em situações críticas de produção.",
+        example: "I'd say: '60/40 split — I code most of the day but write ADRs for big decisions, do pair programming for mentoring, and own the technical roadmap. Staying hands-on means I can give realistic estimates and jump into production issues directly.'",
+        example_pt: "Eu diria: 'Divisão 60/40 — codifico a maior parte do dia mas escrevo ADRs para grandes decisões, faço pair programming para mentoria e sou dono do roadmap técnico. Manter-me hands-on significa que consigo dar estimativas realistas e pular direto em issues de produção.'",
       },
       {
         id: "cv9",
@@ -655,6 +786,8 @@ export const SEED_TOPICS = [
         question_pt: "Como funciona o seu sistema de detecção de anomalias com Gemini para controle de ponto na Lex?",
         answer: "The system feeds structured time-tracking data from TOTVS ERP to Gemini with a carefully engineered prompt defining anomaly categories and requesting confidence scores. To control false positives, I only flag items above 80% confidence and cross-reference against known exceptions like approved overtime and shift workers before surfacing anything to managers. This saves 20+ hours per week of manual review that previously required an HR analyst.",
         answer_pt: "O sistema alimenta o Gemini com dados estruturados de controle de ponto do ERP TOTVS usando um prompt cuidadosamente elaborado que define categorias de anomalias e solicita pontuações de confiança. Para controlar falsos positivos, sinalizamos apenas itens acima de 80% de confiança e cruzamos com exceções conhecidas como horas extras aprovadas e trabalhadores em turno antes de apresentar qualquer coisa aos gestores. Isso economiza mais de 20 horas por semana de revisão manual que antes exigia um analista de RH.",
+        example: "I'd explain: 'Structured data goes to Gemini with a prompt defining anomaly categories + confidence scores. Only items above 80% confidence get flagged, and we cross-reference against approved exceptions before surfacing to managers. This cut 20+ hours/week of manual review.'",
+        example_pt: "Eu explicaria: 'Dados estruturados vão para o Gemini com um prompt que define categorias de anomalias + scores de confiança. Apenas itens acima de 80% de confiança são sinalizados, e cruzamos com exceções aprovadas antes de apresentar aos gestores. Isso cortou 20+ horas/semana de revisão manual.'",
       },
       {
         id: "cv10",
@@ -664,6 +797,8 @@ export const SEED_TOPICS = [
         question_pt: "Você usou AWS Lambda extensivamente. Quais são as limitações reais com que se deparou e como as contornou?",
         answer: "Cold starts on financial APIs were solved with provisioned concurrency; the 15-minute execution limit on document processing was solved by orchestrating multi-step workflows with Step Functions. For PostgreSQL connection management I used RDS Proxy to avoid exhausting connection limits at scale. I kept business logic in framework-agnostic modules with thin Lambda handlers to limit vendor lock-in — this architecture handled 100,000+ daily requests at 99.95% availability at FAVO.",
         answer_pt: "Cold starts nas APIs financeiras foram resolvidos com provisioned concurrency; o limite de execução de 15 minutos no processamento de documentos foi resolvido orquestrando fluxos de trabalho em múltiplas etapas com Step Functions. Para o gerenciamento de conexões com PostgreSQL usei RDS Proxy para evitar esgotar os limites de conexão em escala. Mantive a lógica de negócio em módulos agnósticos de framework com Lambda handlers finos para limitar o vendor lock-in — essa arquitetura processou mais de 100.000 requisições diárias com 99,95% de disponibilidade na FAVO.",
+        example: "I'd list: 'Cold starts → provisioned concurrency. 15-min timeout → Step Functions. Connection limits → RDS Proxy. Vendor lock-in → framework-agnostic business logic modules with thin Lambda handlers.'",
+        example_pt: "Eu listaria: 'Cold starts → provisioned concurrency. Timeout de 15 min → Step Functions. Limites de conexão → RDS Proxy. Vendor lock-in → módulos de lógica de negócio agnósticos de framework com Lambda handlers finos.'",
       },
     ],
   },

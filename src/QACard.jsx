@@ -4,10 +4,14 @@ import { useI18n } from "./i18n/I18nContext.jsx";
 
 export default function QACard({ item, index, topicColor, topicLabel, showTopic, delay = 0, srsStatus }) {
   const [revealed, setRevealed] = useState(false);
+  const [showExample, setShowExample] = useState(false);
   const { t, locale } = useI18n();
   const isPt = locale === "pt-BR";
   const question = (isPt && item.question_pt) || item.question;
   const answer = (isPt && item.answer_pt) || item.answer;
+  const example = (isPt && item.example_pt) || item.example;
+  const diagram = getDiagram(item.id);
+  const hasVisuals = example || diagram;
 
   return (
     <div
@@ -45,13 +49,31 @@ export default function QACard({ item, index, topicColor, topicLabel, showTopic,
           <div className="qa-card__answer">
             <div className="qa-card__answer-label">{t("qaCard.answerLabel")}</div>
             {answer}
-            {getDiagram(item.id) && (
-              <div
-                className="qa-card__diagram"
-                style={{ marginTop: "20px" }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                {getDiagram(item.id)}
+
+            {/* visuals toggle */}
+            {hasVisuals && (
+              <div className="qa-card__visuals" onClick={(e) => e.stopPropagation()}>
+                <button
+                  className={`qa-card__example-btn ${showExample ? "qa-card__example-btn--active" : ""}`}
+                  onClick={() => setShowExample((v) => !v)}
+                  style={{ borderColor: showExample ? topicColor : undefined, color: showExample ? topicColor : undefined }}
+                >
+                  <span className="qa-card__example-btn-icon">{showExample ? "▾" : "▸"}</span>
+                  {isPt ? "Ver Exemplo" : "Show Example"}
+                </button>
+
+                {showExample && (
+                  <div className="qa-card__example-content">
+                    {example && (
+                      <pre className="qa-card__code">{example}</pre>
+                    )}
+                    {diagram && (
+                      <div className="qa-card__diagram">
+                        {diagram}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
           </div>
