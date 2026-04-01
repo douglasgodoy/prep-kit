@@ -28,6 +28,14 @@ export default function Dashboard({ topics, onSelectTopic }) {
       description: t("card.review.desc"),
       type: "special",
     },
+    {
+      id: "__management__",
+      label: t("card.manage.label"),
+      icon: "⚙",
+      color: "#64748b",
+      description: t("card.manage.desc"),
+      type: "special",
+    },
   ];
 
   return (

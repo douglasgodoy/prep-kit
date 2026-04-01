@@ -8,6 +8,7 @@ import CVPage from "./CVPage.jsx";
 import JobPrepPage from "./JobPrepPage.jsx";
 import ReviewDashboard from "./ReviewDashboard.jsx";
 import ReviewSession from "./ReviewSession.jsx";
+import ManagementPage from "./ManagementPage.jsx";
 import { useSRS } from "./srs/useSRS.js";
 import { useI18n } from "./i18n/I18nContext.jsx";
 import "./App.css";
@@ -184,6 +185,14 @@ export default function App() {
           {locale === "en" ? "PT" : "EN"}
         </button>
 
+        <button
+          className="header__manage"
+          onClick={() => { setSearchQuery(""); setView("management"); }}
+          title={t("manage.title")}
+        >
+          ⚙
+        </button>
+
         <div className="header__meta">
           <span className="header__dot" />
           {totalQuestions} {t("header.questions")}
@@ -222,6 +231,14 @@ export default function App() {
             mode={reviewMode}
             sessionType={reviewSessionType}
             onFinish={handleFinishReview}
+          />
+        )}
+        {view === "management" && (
+          <ManagementPage
+            topics={topics}
+            onEditQuestion={handleEditQuestion}
+            onDeleteQuestion={handleDeleteQuestion}
+            onBack={handleBack}
           />
         )}
       </div>
