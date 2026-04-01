@@ -118,6 +118,33 @@ export const translations = {
     // Common
     "common.save": "Save",
     "common.cancel": "Cancel",
+
+    // Edit
+    "edit.pencilTitle": "Edit this question",
+    "edit.questionEN": "Question (EN)",
+    "edit.questionPT": "Question (PT-BR)",
+    "edit.answerEN": "Answer (EN)",
+    "edit.answerPT": "Answer (PT-BR)",
+    "edit.exampleEN": "Example (EN)",
+    "edit.examplePT": "Example (PT-BR)",
+    "edit.subtopic": "Subtopic",
+    "edit.popularity": "Popularity (1-10)",
+    "edit.requiredField": "This field is required",
+
+    // Management
+    "manage.title": "Manage Questions",
+    "manage.subtitle": "Edit, search, and delete questions across all topics",
+    "manage.searchPlaceholder": "Search questions...",
+    "manage.allTopics": "All Topics",
+    "manage.noResults": "No questions match your filters",
+    "manage.deleteConfirm": "Delete this question? This cannot be undone.",
+    "manage.deleted": "Question deleted",
+    "manage.deleteAction": "Delete",
+    "manage.saved": "Changes saved",
+
+    // Dashboard card
+    "card.manage.label": "Manage",
+    "card.manage.desc": "Edit, delete, and manage all your questions",
   },
   "pt-BR": {
     // Dashboard
@@ -238,5 +265,32 @@ export const translations = {
     // Common
     "common.save": "Salvar",
     "common.cancel": "Cancelar",
+
+    // Edit
+    "edit.pencilTitle": "Editar esta pergunta",
+    "edit.questionEN": "Pergunta (EN)",
+    "edit.questionPT": "Pergunta (PT-BR)",
+    "edit.answerEN": "Resposta (EN)",
+    "edit.answerPT": "Resposta (PT-BR)",
+    "edit.exampleEN": "Exemplo (EN)",
+    "edit.examplePT": "Exemplo (PT-BR)",
+    "edit.subtopic": "Subtópico",
+    "edit.popularity": "Popularidade (1-10)",
+    "edit.requiredField": "Este campo é obrigatório",
+
+    // Management
+    "manage.title": "Gerenciar Perguntas",
+    "manage.subtitle": "Edite, busque e exclua perguntas de todos os tópicos",
+    "manage.searchPlaceholder": "Buscar perguntas...",
+    "manage.allTopics": "Todos os Tópicos",
+    "manage.noResults": "Nenhuma pergunta corresponde aos filtros",
+    "manage.deleteConfirm": "Excluir esta pergunta? Esta ação não pode ser desfeita.",
+    "manage.deleted": "Pergunta excluída",
+    "manage.deleteAction": "Excluir",
+    "manage.saved": "Alterações salvas",
+
+    // Dashboard card
+    "card.manage.label": "Gerenciar",
+    "card.manage.desc": "Edite, exclua e gerencie todas as suas perguntas",
   },
 };
