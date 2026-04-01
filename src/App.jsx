@@ -196,10 +196,10 @@ export default function App() {
           <Dashboard topics={topics} onSelectTopic={handleSelectTopic} />
         )}
         {view === "topic" && activeTopic && (
-          <QuestionList topic={activeTopic} onBack={handleBack} getStatus={srs.getStatus} />
+          <QuestionList topic={activeTopic} onBack={handleBack} getStatus={srs.getStatus} onEditQuestion={handleEditQuestion} />
         )}
         {view === "search" && (
-          <SearchResults query={searchQuery} topics={topics} />
+          <SearchResults query={searchQuery} topics={topics} onEditQuestion={handleEditQuestion} />
         )}
         {view === "cv" && (
           <CVPage onBack={handleBack} />

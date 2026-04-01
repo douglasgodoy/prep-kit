@@ -2,7 +2,7 @@ import { useState } from "react";
 import QACard from "./QACard.jsx";
 import { useI18n } from "./i18n/I18nContext.jsx";
 
-export default function SearchResults({ query, topics }) {
+export default function SearchResults({ query, topics, onEditQuestion }) {
   const [viewMode, setViewMode] = useState("grouped"); // "grouped" | "flat"
   const { t } = useI18n();
 
@@ -93,6 +93,8 @@ export default function SearchResults({ query, topics }) {
                   index={i}
                   topicColor={group.color}
                   delay={i * 50}
+                  topicId={topicId}
+                  onEditQuestion={onEditQuestion}
                 />
               ))}
             </div>
@@ -109,6 +111,8 @@ export default function SearchResults({ query, topics }) {
               topicLabel={q.topicLabel}
               showTopic
               delay={i * 40}
+              topicId={q.topicId}
+              onEditQuestion={onEditQuestion}
             />
           ))}
         </div>

@@ -1,7 +1,7 @@
 import QACard from "./QACard.jsx";
 import { useI18n } from "./i18n/I18nContext.jsx";
 
-export default function QuestionList({ topic, onBack, getStatus }) {
+export default function QuestionList({ topic, onBack, getStatus, onEditQuestion }) {
   const { t } = useI18n();
 
   return (
@@ -29,6 +29,8 @@ export default function QuestionList({ topic, onBack, getStatus }) {
             topicColor={topic.color}
             delay={i * 50}
             srsStatus={getStatus ? getStatus(q.id) : null}
+            topicId={topic.id}
+            onEditQuestion={onEditQuestion}
           />
         ))}
       </div>
