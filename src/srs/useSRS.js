@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { sm2, createDefaultSRSData, getIntervalPreview } from "./sm2.js";
-import { loadSRSData, updateQuestionSRS, recordSession, loadStats } from "./storage.js";
+import { loadSRSData, updateQuestionSRS, recordSession, loadStats, resetQuestionSRS } from "./storage.js";
 import { buildQueues, MODES } from "./queue.js";
 
 export { MODES };
@@ -62,6 +62,15 @@ export function useSRS(topics) {
     }));
   }, [srsData]);
 
+  const removeQuestion = useCallback((questionId) => {
+    resetQuestionSRS(questionId);
+    setSrsData((prev) => {
+      const next = { ...prev };
+      delete next[questionId];
+      return next;
+    });
+  }, []);
+
   const getTotalDue = useCallback(() => {
     const tech = buildQueues(topics, MODES.TECHNICAL);
     const career = buildQueues(topics, MODES.CAREER);
@@ -77,5 +86,6 @@ export function useSRS(topics) {
     getStatus,
     getIntervalPreviews,
     getTotalDue,
+    removeQuestion,
   };
 }

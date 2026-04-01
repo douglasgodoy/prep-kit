@@ -12,8 +12,17 @@ import { useSRS } from "./srs/useSRS.js";
 import { useI18n } from "./i18n/I18nContext.jsx";
 import "./App.css";
 
+const TOPICS_STORAGE_KEY = "iprep_topics";
+
 export default function App() {
-  const [topics, setTopics] = useState(SEED_TOPICS);
+  const [topics, setTopics] = useState(() => {
+    try {
+      const saved = localStorage.getItem(TOPICS_STORAGE_KEY);
+      return saved ? JSON.parse(saved) : SEED_TOPICS;
+    } catch {
+      return SEED_TOPICS;
+    }
+  });
   const [view, setView] = useState("dashboard");
   const [activeTopicId, setActiveTopicId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -26,6 +35,10 @@ export default function App() {
   const { locale, t, changeLocale } = useI18n();
 
   useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    localStorage.setItem(TOPICS_STORAGE_KEY, JSON.stringify(topics));
+  }, [topics]);
 
   const activeTopic = topics.find((t) => t.id === activeTopicId);
 
@@ -42,6 +55,11 @@ export default function App() {
     }
     if (id === "__review__") {
       setView("reviewdash");
+      setSearchQuery("");
+      return;
+    }
+    if (id === "__management__") {
+      setView("management");
       setSearchQuery("");
       return;
     }
@@ -86,6 +104,32 @@ export default function App() {
           : t
       )
     );
+  }
+
+  function handleEditQuestion(topicId, questionId, updatedFields) {
+    setTopics((prev) =>
+      prev.map((t) =>
+        t.id === topicId
+          ? {
+              ...t,
+              questions: t.questions.map((q) =>
+                q.id === questionId ? { ...q, ...updatedFields } : q
+              ),
+            }
+          : t
+      )
+    );
+  }
+
+  function handleDeleteQuestion(topicId, questionId) {
+    setTopics((prev) =>
+      prev.map((t) =>
+        t.id === topicId
+          ? { ...t, questions: t.questions.filter((q) => q.id !== questionId) }
+          : t
+      )
+    );
+    srs.removeQuestion(questionId);
   }
 
   function handleStartReview(mode, sessionType) {
