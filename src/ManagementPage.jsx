@@ -23,10 +23,10 @@ export default function ManagementPage({ topics, onEditQuestion, onDeleteQuestio
   const filtered = lowerSearch
     ? allQuestions.filter(
         (q) =>
-          q.question.toLowerCase().includes(lowerSearch) ||
-          q.answer.toLowerCase().includes(lowerSearch) ||
-          q.subtopic.toLowerCase().includes(lowerSearch) ||
-          q.topicLabel.toLowerCase().includes(lowerSearch)
+          (q.question || "").toLowerCase().includes(lowerSearch) ||
+          (q.answer || "").toLowerCase().includes(lowerSearch) ||
+          (q.subtopic || "").toLowerCase().includes(lowerSearch) ||
+          (q.topicLabel || "").toLowerCase().includes(lowerSearch)
       )
     : allQuestions;
 

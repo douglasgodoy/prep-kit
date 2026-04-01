@@ -187,7 +187,7 @@ export default function App() {
 
         <button
           className="header__manage"
-          onClick={() => { setSearchQuery(""); setView("management"); }}
+          onClick={() => handleSelectTopic("__management__")}
           title={t("manage.title")}
         >
           ⚙
