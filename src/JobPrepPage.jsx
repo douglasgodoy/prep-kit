@@ -34,6 +34,7 @@ export default function JobPrepPage({ topics, onAddQuestions, onBack }) {
   const [genError, setGenError] = useState("");
   const [results, setResults] = useState([]);
   const [jobTitle, setJobTitle] = useState("");
+  const [saved, setSaved] = useState(false);
   const { t } = useI18n();
 
   async function handleGenerate() {
@@ -41,12 +42,16 @@ export default function JobPrepPage({ topics, onAddQuestions, onBack }) {
     setGenerating(true);
     setGenError("");
     setResults([]);
+    setSaved(false);
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const res = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+        },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
+          model: "gpt-4o-mini",
           max_tokens: 4000,
           messages: [
             {
@@ -57,7 +62,7 @@ export default function JobPrepPage({ topics, onAddQuestions, onBack }) {
         }),
       });
       const data = await res.json();
-      const raw = data.content?.find((b) => b.type === "text")?.text || "[]";
+      const raw = data.choices?.[0]?.message?.content || "[]";
       const clean = raw.replace(/```json|```/g, "").trim();
       const parsed = JSON.parse(clean);
       const newQs = parsed.map((q) => ({
@@ -78,10 +83,11 @@ export default function JobPrepPage({ topics, onAddQuestions, onBack }) {
   }
 
   function handleSaveToTopic() {
-    // Save to "mycareer" topic if it exists, otherwise create a new one
+    if (saved || results.length === 0) return;
     const careerTopic = topics.find((tp) => tp.id === "mycareer");
     if (careerTopic) {
       onAddQuestions("mycareer", results);
+      setSaved(true);
     }
   }
 
@@ -147,8 +153,8 @@ export default function JobPrepPage({ topics, onAddQuestions, onBack }) {
                 {results.length} {t("jobprep.sortedBy")}
               </span>
             </div>
-            <button className="btn btn--accent" onClick={handleSaveToTopic}>
-              {t("jobprep.saveToCareer")}
+            <button className="btn btn--accent" onClick={handleSaveToTopic} disabled={saved}>
+              {saved ? "✓ " + t("jobprep.saved") : t("jobprep.saveToCareer")}
             </button>
           </div>
 

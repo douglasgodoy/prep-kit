@@ -73,6 +73,7 @@ export const translations = {
     "jobprep.generatedQuestions": "Generated Questions",
     "jobprep.sortedBy": "questions · sorted by likelihood",
     "jobprep.saveToCareer": "Save to My Career",
+    "jobprep.saved": "Saved!",
 
     // Review Dashboard
     "review.title": "Spaced Repetition",
@@ -220,6 +221,7 @@ export const translations = {
     "jobprep.generatedQuestions": "Perguntas Geradas",
     "jobprep.sortedBy": "perguntas · ordenadas por probabilidade",
     "jobprep.saveToCareer": "Salvar em Minha Carreira",
+    "jobprep.saved": "Salvo!",
 
     // Review Dashboard
     "review.title": "Repetição Espaçada",

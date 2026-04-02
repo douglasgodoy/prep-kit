@@ -21,11 +21,14 @@ export default function ActionModal({ topics, onAddQuestions, onClose }) {
     setGenError("");
     setSuccess("");
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const res = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
+        },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
+          model: "gpt-4o-mini",
           max_tokens: 1000,
           messages: [
             {
@@ -36,7 +39,7 @@ export default function ActionModal({ topics, onAddQuestions, onClose }) {
         }),
       });
       const data = await res.json();
-      const raw = data.content?.find((b) => b.type === "text")?.text || "[]";
+      const raw = data.choices?.[0]?.message?.content || "[]";
       const clean = raw.replace(/```json|```/g, "").trim();
       const parsed = JSON.parse(clean);
       const newQs = parsed.map((q) => ({
